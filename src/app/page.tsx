@@ -8,8 +8,8 @@ import Image from "next/image";
 export default function Home() {
   return (
     <>
-      <Header />
       <div id="gradient" className="h-[800] bg-radial from">
+        <Header />
         <div className="flex flex-col justify-center h-full items-center gap-8 mx-20">
           <section className="text-7xl font-extrabold text-center ">
             <span className="bg-clip-text text-black/60">Connect</span> in your
@@ -48,7 +48,6 @@ export default function Home() {
             className="hidden md:block m-4 "
           />
         </section>
-
         <section className="p-8 text-center flex gap-2 flex-col">
           <div className="text-4xl font-bold my-4">Why Choose Sphere?</div>
           <span className="mb-6">
@@ -58,7 +57,7 @@ export default function Home() {
           <Features />
         </section>
       </main>
-      <Footer/>
+      <Footer />
     </>
   );
 }
