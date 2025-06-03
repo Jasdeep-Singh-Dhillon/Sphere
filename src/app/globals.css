@@ -2,7 +2,7 @@
 
 @plugin 'tailwindcss-animate';
 
-@custom-variant dark (&:is(.dark *));
+
 
 @theme {
   --color-background: hsl(var(--background));
@@ -174,7 +174,7 @@
   }
 }
 
-#gradient {
+.gradient {
   background:
     radial-gradient(at 34% 32%, #FFA397 5px, transparent 40%),
     radial-gradient(at 69% 63%, #72B1F9 5px, transparent 40%),

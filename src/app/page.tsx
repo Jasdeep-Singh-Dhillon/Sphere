@@ -1,4 +1,4 @@
-import Features from "@/components/features";
+import Features from "@/components/ui/features";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/ui/footer";
 import Header from "@/components/ui/header";
@@ -8,10 +8,10 @@ import Image from "next/image";
 export default function Home() {
   return (
     <>
-      <div id="gradient" className="h-[800] bg-radial from">
+      <div className="gradient">
         <Header />
-        <div className="flex flex-col justify-center h-full items-center gap-8 mx-20">
-          <section className="text-7xl font-extrabold text-center ">
+        <div className="flex flex-col justify-center h-full items-center gap-8 mx-20 py-20">
+          <section className="text-7xl font-extrabold text-center">
             <span className="bg-clip-text text-black/60">Connect</span> in your
             digital sphere
           </section>
