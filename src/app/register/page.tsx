@@ -5,15 +5,17 @@ import { z } from "zod/v4";
 import useAppForm from "@/lib/appForm";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Register() {
   const registerUser = useMutation(api.register.registerUser);
   const registerForm = useAppForm({
     defaultValues: {
-      email: "arc@mail.com",
-      password: "arc123",
-      username: "arc",
-      displayName: "Arc",
+      email: "",
+      password: "",
+      username: "",
+      displayName: "",
       dateofbirth: 12,
       monthofbirth: 2,
       yearofbirth: 2020,
@@ -41,8 +43,7 @@ export default function Register() {
     },
     onSubmit: function ({ value }) {
       console.log("Submitting", value);
-      alert(JSON.stringify(value, null, 2));
-
+      
       registerUser({
         username: value.username,
         displayName: value.displayName,
@@ -53,21 +54,15 @@ export default function Register() {
   });
   function formSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // console.log(registerForm.getFieldValue("email"));
-    // console.log(registerForm.getFieldValue("displayName"));
-    // console.log(registerForm.getFieldValue("username"));
-    console.log(typeof registerForm.getFieldValue("dateofbirth"));
-    if (registerForm.validate("submit")) {
-      console.log(registerForm.getAllErrors());
-    }
     registerForm.handleSubmit();
   }
   return (
-    <div className="gradient w-full h-dvh  ">
+    <div className="gradient w-full h-dvh flex flex-col justify-center ">
       <form
         onSubmit={formSubmit}
-        className="bg-background/70 backdrop-saturate-100 flex flex-col items-center gap-4 justify-center p-8 m-auto"
+        className="bg-background/70 backdrop-saturate-100 flex flex-col items-center gap-6 p-8 mx-8 backdrop-blur-xs rounded-2xl shadow"
       >
+        <h2 className="text-3xl font-bold">Create Account</h2>
         <registerForm.AppField name="username">
           {(field) => (
             <div className="grid w-full max-w-sm items-center gap-3">
@@ -80,6 +75,13 @@ export default function Register() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
               />
+              {!field.state.meta.isValid ? (
+                <em role="alert" className="text-red-400">
+                  {field.state.meta.errors[0]?.message}
+                </em>
+              ) : (
+                ""
+              )}
             </div>
           )}
         </registerForm.AppField>
@@ -96,6 +98,13 @@ export default function Register() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
               />
+              {!field.state.meta.isValid ? (
+                <em role="alert" className="text-red-400">
+                  {field.state.meta.errors[0]?.message}
+                </em>
+              ) : (
+                ""
+              )}
             </div>
           )}
         </registerForm.AppField>
@@ -112,6 +121,13 @@ export default function Register() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
               />
+              {!field.state.meta.isValid ? (
+                <em role="alert" className="text-red-400">
+                  {field.state.meta.errors[0]?.message}
+                </em>
+              ) : (
+                ""
+              )}
             </div>
           )}
         </registerForm.AppField>
@@ -128,6 +144,13 @@ export default function Register() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
               />
+              {!field.state.meta.isValid ? (
+                <em role="alert" className="text-red-400">
+                  {field.state.meta.errors[0]?.message}
+                </em>
+              ) : (
+                ""
+              )}
             </div>
           )}
         </registerForm.AppField>
@@ -149,13 +172,29 @@ export default function Register() {
                   field.handleChange(parseInt(e.target.value));
                 }}
               />
+              {!field.state.meta.isValid ? (
+                <em role="alert" className="text-red-400">
+                  {field.state.meta.errors[0]?.message}
+                </em>
+              ) : (
+                ""
+              )}
             </div>
           )}
         </registerForm.AppField>
 
         <registerForm.AppForm>
-          <registerForm.Button>Register</registerForm.Button>
+          <registerForm.Button
+            variant={"secondary"}
+            className="bg-accent grid w-full max-w-sm items-center gap-3 hover:bg-accent/50"
+          >
+            Continue
+          </registerForm.Button>
         </registerForm.AppForm>
+
+        <Button className="grid w-full max-w-sm items-center gap-3">
+          <Link href="/login">Already have an account?</Link>
+        </Button>
       </form>
     </div>
   );
