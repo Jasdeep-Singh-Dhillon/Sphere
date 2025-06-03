@@ -10,7 +10,7 @@ const pacifico = Pacifico({
 
 export default function Header() {
   return (
-    <header className="flex items-center gap-4 justify-between w-full p-6 backdrop-blur-sm bg-background/60 z-40 sticky top-0">
+    <header className="flex items-center gap-4 justify-between w-full p-6 backdrop-blur-sm bg-background/20 z-40 sticky top-0 backdrop-saturate-100">
       <div className="flex items-center gap-4">
         <Icons.sphere className="h-16 w-16" />
         <span className={`text-4xl ${pacifico.className}`}>Sphere</span>
