@@ -1,5 +1,5 @@
-import { CirclePlay } from "lucide-react";
-
+import { CirclePlay, Github } from "lucide-react"; // Added Github icon
+import { Icons } from "@/components/icons";
 export default function Login() {
     return (  
         <div className="gradient h-dvh min-h-screen w-full flex items-center justify-center ">
@@ -14,15 +14,22 @@ export default function Login() {
                         type="button"
                         className="flex items-center justify-center gap-2 w-full py-2 rounded-lg border font-semibold"
                     >
-                        <CirclePlay className="w-5 h-5" />
+                        <Icons.google className="w-5 h-5" />
                         Continue with Google
                     </button>
                     <button
                         type="button"
                         className="flex items-center justify-center gap-2 w-full py-2 rounded-lg border font-semibold"
                     >
-                        <CirclePlay className="w-5 h-5" />
+                        <Icons.apple className="w-5 h-5" />
                         Continue with Apple
+                    </button>
+                    <button
+                        type="button"
+                        className="flex items-center justify-center gap-2 w-full py-2 rounded-lg border font-semibold"
+                    >
+                        <Github className="w-5 h-5" />
+                        Continue with GitHub
                     </button>
                 </div>
 
