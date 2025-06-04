@@ -1,3 +1,6 @@
 export default function Hub() {
-  return ("1123")
+  return (<div>
+    Chat Page
+    Messages
+  </div>)
 }

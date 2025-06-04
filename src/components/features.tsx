@@ -3,8 +3,8 @@ import { Video, MonitorCog, Gauge, Images, ShieldUser } from "lucide-react";
 
 export default function Features() {
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
-      <Card className="hover:bg-foreground/10 backdrop-blur-xs rounded-[4vw] p-8">
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 rounded-lg text-left">
+      <Card className="hover:bg-foreground/10 backdrop-blur-xs p-4 rounded-lg">
         <CardHeader>
           <CardTitle className="flex gap-4 items-center">
             <Video />
@@ -19,7 +19,7 @@ export default function Features() {
           </p>
         </CardContent>
       </Card>
-      <Card className="hover:bg-foreground/10 backdrop-blur-xs rounded-[4vw] p-8">
+      <Card className="hover:bg-foreground/10 backdrop-blur-xs p-4 rounded-lg">
         <CardHeader>
           <CardTitle className="flex gap-4 items-center">
             <MonitorCog />
@@ -34,7 +34,7 @@ export default function Features() {
           </p>
         </CardContent>
       </Card>
-      <Card className="hover:bg-foreground/10 backdrop-blur-xs rounded-[4vw] p-8">
+      <Card className="hover:bg-foreground/10 backdrop-blur-xs p-4 rounded-lg">
         <CardHeader>
           <CardTitle className="flex gap-4 items-center">
             <Gauge />
@@ -49,7 +49,7 @@ export default function Features() {
           </p>
         </CardContent>
       </Card>
-      <Card className="hover:bg-foreground/10 backdrop-blur-xs rounded-[4vw] p-8">
+      <Card className="hover:bg-foreground/10 backdrop-blur-xs p-4 rounded-lg">
         <CardHeader>
           <CardTitle className="flex gap-4 items-center">
             <Images />
@@ -64,7 +64,7 @@ export default function Features() {
           </p>
         </CardContent>
       </Card>
-      <Card className="hover:bg-foreground/10 backdrop-blur-xs rounded-[4vw] p-8">
+      <Card className="hover:bg-foreground/10 backdrop-blur-xs p-4 rounded-lg">
         <CardHeader>
           <CardTitle className="flex gap-4 items-center">
             <ShieldUser />

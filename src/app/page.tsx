@@ -15,16 +15,16 @@ export default function Home() {
             <span className="bg-clip-text text-black/60">Connect</span> in your
             digital sphere
           </section>
-          <section className="text-2xl my-6 text-center font-semibold">
+          <section className="text-2xl text-center">
             Experience seamless communication with crystal clear voice, instant
             messaging and immersive communities. Built for everyone.
           </section>
-          <section className="flex flex-col gap-2">
-            <Button variant="default">
+          <section className="flex flex-col gap-2 w-full justify-center items-center">
+            <Button variant="default" className="w-5/10">
               Get started now
               <ChevronRight />
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" className="w-5/10">
               Demo
               <CirclePlay />
             </Button>
@@ -38,14 +38,14 @@ export default function Home() {
             width={500}
             height={200}
             alt="Homepage of the chats tab"
-            className="md:hidden"
+            className="md:hidden shadow-2xl shadow-primary rounded-lg"
           />
           <Image
             src="/images/homepage_placeholder.png"
             width={900}
             height={400}
             alt="Homepage of the chats tab"
-            className="hidden md:block m-4 "
+            className="hidden md:block m-4 shadow-2xl shadow-primary rounded-lg"
           />
         </section>
         <section className="p-8 text-center flex gap-2 flex-col">

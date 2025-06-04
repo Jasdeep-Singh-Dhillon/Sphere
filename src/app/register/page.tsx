@@ -8,6 +8,7 @@ import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
+import { redirect } from "next/navigation";
 
 export default function Register() {
   const registerUser = useMutation(api.register.registerUser);
@@ -43,14 +44,13 @@ export default function Register() {
         .readonly(),
     },
     onSubmit: function ({ value }) {
-      console.log("Submitting", value);
-
       registerUser({
         username: value.username,
         displayName: value.displayName,
         email: value.email,
         password: value.password,
       });
+      redirect("/login");
     },
   });
   function formSubmit(e: FormEvent<HTMLFormElement>) {
@@ -64,15 +64,10 @@ export default function Register() {
         className="bg-background/60 backdrop-saturate-100 flex flex-col items-center gap-4 p-8 mx-8 backdrop-blur-xs rounded-2xl shadow w-full max-w-md"
       >
         {/* Logo with link, hover pull-up animation (no shadow) */}
-        <Link
-          href="/"
-          aria-label="Go to homepage"
-          className="group"
-        >
-          <Icons.sphere
-            className="w-16 h-16 mb-2 transition-transform duration-300 group-hover:-translate-y-4"
-          />
+        <Link href="/" aria-label="Go to homepage" className="group">
+          <Icons.sphere className="w-16 h-16 mb-2 transition-transform duration-300 group-hover:-translate-y-4" />
         </Link>
+
         <h2 className="text-3xl font-bold">Create Account</h2>
         <registerForm.AppField name="username">
           {(field) => (
@@ -133,7 +128,7 @@ export default function Register() {
                 onBlur={field.handleBlur}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="border-primary/40" 
+                className="border-primary/40"
               />
               {!field.state.meta.isValid ? (
                 <em role="alert" className="text-red-400">
