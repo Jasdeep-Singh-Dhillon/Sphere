@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthActions } from "@convex-dev/auth/react";
 import Link from "next/link";
+import { ConvexAuthProvider } from "@/components/convexClientProvider";
 
 export default function Login() {
   const { signIn } = useAuthActions();
   return (
+    <ConvexAuthProvider>
     <div className="gradient h-dvh min-h-screen w-full flex items-center justify-center ">
       <div className=" p-10 rounded-2xl shadow-2xl w-full max-w-md flex flex-col items-center bg-background/60 ">
         {/* Logo with link and hover pull-up animation */}
@@ -102,5 +104,6 @@ export default function Login() {
         </form>
       </div>
     </div>
+    </ConvexAuthProvider>
   );
 }

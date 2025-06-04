@@ -6,21 +6,12 @@ import { authTables } from "@convex-dev/auth/server";
 
 export default defineSchema({
   ...authTables,
-  users: defineTable({
-    username: v.string(),
-    displayName: v.string(),
-    email: v.string(),
-    phone: v.optional(v.string()),
-    password: v.string(),
-    userIcon: v.optional(v.string()),
-    about: v.optional(v.string()),
-    joined: v.optional(v.array(v.id("servers"))),
-  }).index("by_username", ["username"]),
+  
   servers: defineTable({
     name: v.string(),
     serverIcon: v.string(),
     description: v.string(),
-    ownerId: v.id("users"),
+    // ownerId: v.id("users"),
   }),
   channels: defineTable({
     name: v.string(),
@@ -34,7 +25,7 @@ export default defineSchema({
     serverId: v.id("servers"),
   }),
   messages: defineTable({
-    userId: v.id("users"),
+    // userId: v.id("users"),
     channelId: v.id("channels"),
     content: v.string(),
     replyMessageId: v.optional(v.id("messages")),
@@ -51,14 +42,14 @@ export default defineSchema({
     isAdmin: v.boolean(),
   }),
   serverProfiles: defineTable({
-    userId: v.id("users"),
+    // userId: v.id("users"),
     serverId: v.id("servers"),
     displayName: v.string(),
     userIcon: v.string(),
     about: v.string(),
   }),
   userRoles: defineTable({
-    userId: v.id("users"),
+    // userId: v.id("users"),
     serverId: v.id("servers"),
     roleId: v.id("roles"),
   }),

@@ -68,6 +68,7 @@ export default function Register() {
           <Icons.sphere className="w-16 h-16 mb-2 transition-transform duration-300 group-hover:-translate-y-4" />
         </Link>
 
+        <Icons.sphere className="w-16 h-16" />
         <h2 className="text-3xl font-bold">Create Account</h2>
         <registerForm.AppField name="username">
           {(field) => (
