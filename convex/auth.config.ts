@@ -4,7 +4,7 @@ const config = {
   providers: [
     {
       domain: env.CONVEX_SITE_URL,
-      applicationID: "convex",
+      applicationID: "Sphere",
     },
   ],
 };

@@ -9,8 +9,10 @@ const convex = new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL);
 
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
   return (
-    <ConvexAuthNextjsProvider client={convex}>
-      <ConvexProvider client={convex}>{children}</ConvexProvider>
-    </ConvexAuthNextjsProvider>
+    <ConvexProvider client={convex}>
+      <ConvexAuthNextjsProvider client={convex}>
+        {children}
+      </ConvexAuthNextjsProvider>
+    </ConvexProvider>
   );
 }

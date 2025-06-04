@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "./card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Video, MonitorCog, Gauge, Images, ShieldUser } from "lucide-react";
 
 export default function Features() {

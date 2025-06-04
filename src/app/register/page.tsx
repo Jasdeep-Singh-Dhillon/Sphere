@@ -7,6 +7,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Icons } from "@/components/icons";
 
 export default function Register() {
   const registerUser = useMutation(api.register.registerUser);
@@ -43,7 +44,7 @@ export default function Register() {
     },
     onSubmit: function ({ value }) {
       console.log("Submitting", value);
-      
+
       registerUser({
         username: value.username,
         displayName: value.displayName,
@@ -57,11 +58,12 @@ export default function Register() {
     registerForm.handleSubmit();
   }
   return (
-    <div className="gradient w-full h-dvh flex flex-col justify-center ">
+    <div className="gradient w-full h-dvh flex justify-center items-center min-h-screen ">
       <form
         onSubmit={formSubmit}
-        className="bg-background/70 backdrop-saturate-100 flex flex-col items-center gap-6 p-8 mx-8 backdrop-blur-xs rounded-2xl shadow"
+        className="bg-background/60 backdrop-saturate-100 flex flex-col items-center gap-6 p-8 mx-8 backdrop-blur-xs rounded-2xl shadow w-full max-w-md"
       >
+        <Icons.sphere className="w-5 h-5" />
         <h2 className="text-3xl font-bold">Create Account</h2>
         <registerForm.AppField name="username">
           {(field) => (
@@ -74,6 +76,7 @@ export default function Register() {
                 onBlur={field.handleBlur}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
+                className="border-primary/40"
               />
               {!field.state.meta.isValid ? (
                 <em role="alert" className="text-red-400">
@@ -97,6 +100,7 @@ export default function Register() {
                 onBlur={field.handleBlur}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
+                className="border-primary/40"
               />
               {!field.state.meta.isValid ? (
                 <em role="alert" className="text-red-400">
@@ -120,6 +124,7 @@ export default function Register() {
                 onBlur={field.handleBlur}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
+                className="border-primary/40" 
               />
               {!field.state.meta.isValid ? (
                 <em role="alert" className="text-red-400">
@@ -143,6 +148,7 @@ export default function Register() {
                 onBlur={field.handleBlur}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
+                className="border-primary/40"
               />
               {!field.state.meta.isValid ? (
                 <em role="alert" className="text-red-400">
@@ -171,6 +177,7 @@ export default function Register() {
                   console.log(e.target.value);
                   field.handleChange(parseInt(e.target.value));
                 }}
+                className="border-primary/40"
               />
               {!field.state.meta.isValid ? (
                 <em role="alert" className="text-red-400">

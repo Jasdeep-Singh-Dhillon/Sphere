@@ -1,6 +1,7 @@
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Pacifico } from "next/font/google";
+import Link from "next/link";
 
 const pacifico = Pacifico({
   weight: "400",
@@ -15,7 +16,9 @@ export default function Header() {
         <Icons.sphere className="h-16 w-16" />
         <span className={`text-4xl ${pacifico.className}`}>Sphere</span>
       </div>
-      <Button variant="secondary" className="bg-accent">Login</Button>
+      <Button variant="secondary" className="bg-accent">
+        <Link href={"/login"}>Login</Link>
+      </Button>
     </header>
   );
 }

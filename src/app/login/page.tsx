@@ -8,7 +8,7 @@ export default function Login() {
   const { signIn } = useAuthActions();
   return (
     <div className="gradient h-dvh min-h-screen w-full flex items-center justify-center ">
-      <div className=" p-10 rounded-2xl shadow-2xl w-full max-w-md flex flex-col items-center bg-background/80 ">
+      <div className=" p-10 rounded-2xl shadow-2xl w-full max-w-md flex flex-col items-center bg-background/60 ">
         <Icons.sphere className="w-16 h-16 mb-4" />
         <h1 className="text-3xl font-extrabold text-accent mb-2">Login</h1>
         <p className="mb-6 text-center w-full">
@@ -57,7 +57,7 @@ export default function Login() {
               type="text"
               name="username"
               id="username"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2"
+              className="w-full px-4 py-2 border-primary/40 rounded-lg focus:outline-none focus:ring-2"
               required
             />
           </div>
@@ -69,7 +69,7 @@ export default function Login() {
               type="password"
               name="password"
               id="password"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 "
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-primary/40 "
               required
             />
           </div>

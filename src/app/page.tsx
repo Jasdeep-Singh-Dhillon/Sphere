@@ -1,7 +1,7 @@
-import Features from "@/components/ui/features";
+import Features from "@/components/features";
 import { Button } from "@/components/ui/button";
-import Footer from "@/components/ui/footer";
-import Header from "@/components/ui/header";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 import { CirclePlay, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
