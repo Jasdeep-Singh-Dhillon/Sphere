@@ -61,9 +61,18 @@ export default function Register() {
     <div className="gradient w-full h-dvh flex justify-center items-center min-h-screen ">
       <form
         onSubmit={formSubmit}
-        className="bg-background/60 backdrop-saturate-100 flex flex-col items-center gap-6 p-8 mx-8 backdrop-blur-xs rounded-2xl shadow w-full max-w-md"
+        className="bg-background/60 backdrop-saturate-100 flex flex-col items-center gap-4 p-8 mx-8 backdrop-blur-xs rounded-2xl shadow w-full max-w-md"
       >
-        <Icons.sphere className="w-5 h-5" />
+        {/* Logo with link, hover pull-up animation (no shadow) */}
+        <Link
+          href="/"
+          aria-label="Go to homepage"
+          className="group"
+        >
+          <Icons.sphere
+            className="w-16 h-16 mb-2 transition-transform duration-300 group-hover:-translate-y-4"
+          />
+        </Link>
         <h2 className="text-3xl font-bold">Create Account</h2>
         <registerForm.AppField name="username">
           {(field) => (

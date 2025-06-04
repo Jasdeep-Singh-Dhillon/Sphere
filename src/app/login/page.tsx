@@ -3,13 +3,23 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthActions } from "@convex-dev/auth/react";
+import Link from "next/link";
 
 export default function Login() {
   const { signIn } = useAuthActions();
   return (
     <div className="gradient h-dvh min-h-screen w-full flex items-center justify-center ">
       <div className=" p-10 rounded-2xl shadow-2xl w-full max-w-md flex flex-col items-center bg-background/60 ">
-        <Icons.sphere className="w-16 h-16 mb-4" />
+        {/* Logo with link and hover pull-up animation */}
+        <Link
+          href="/"
+          aria-label="Go to homepage"
+          className="group"
+        >
+          <Icons.sphere
+            className="w-16 h-16 mb-4 transition-transform duration-300 group-hover:-translate-y-2"
+          />
+        </Link>
         <h1 className="text-3xl font-extrabold text-accent mb-2">Login</h1>
         <p className="mb-6 text-center w-full">
           Welcome back! Please enter your credentials.
