@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 export const env = createEnv({
   server: {
     CONVEX_DEPLOYMENT: z.string(),
-    CONVEX_SITE_URL: z.url(),
+    CONVEX_SITE_URL: z.string(),
   },
   client: {
     NEXT_PUBLIC_CONVEX_URL: z.url(),

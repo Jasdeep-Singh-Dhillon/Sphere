@@ -16,7 +16,7 @@ import type {
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
 import type * as httpActions from "../httpActions.js";
-import type * as register from "../register.js";
+import type * as mutation from "../mutation.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -30,7 +30,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   http: typeof http;
   httpActions: typeof httpActions;
-  register: typeof register;
+  mutation: typeof mutation;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

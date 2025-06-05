@@ -7,7 +7,7 @@ import { env } from "@/lib/env.js";
 
 const convex = new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL!);
 
-export default function ConvexClientProvider({
+export function ConvexClientProvider({
   children,
 }: {
   children: ReactNode;
@@ -15,7 +15,7 @@ export default function ConvexClientProvider({
   return <ConvexProvider client={convex}>{children}</ConvexProvider>;
 }
 
-export function ConvexAuthProvider({ children }: { children: ReactNode }) {
+export function ConvexAuthNextProvider({ children }: { children: ReactNode }) {
   return (
     <ConvexAuthNextjsProvider client={convex}>
       {children}

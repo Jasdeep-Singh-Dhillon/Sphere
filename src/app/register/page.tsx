@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
 import { redirect } from "next/navigation";
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Register() {
-  const registerUser = useMutation(api.register.registerUser);
+  const registerUser = useMutation(api.mutation.registerUser);
   const registerForm = useAppForm({
     defaultValues: {
       email: "",
@@ -19,29 +20,27 @@ export default function Register() {
       username: "",
       displayName: "",
       dateofbirth: 12,
-      monthofbirth: 2,
-      yearofbirth: 2020,
+      monthofbirth: undefined,
+      yearofbirth: undefined,
     },
     validators: {
-      onChange: z
-        .object({
-          email: z.email({
-            message: "Enter a valid email",
-          }),
-          password: z.string().min(6, {
-            message: "Password must be at least 6 characters",
-          }),
-          username: z.string().min(3, {
-            message: "Username must be at least 3 characters",
-          }),
-          displayName: z.string().min(3, {
-            message: "Display Name must be at least 3 characters",
-          }),
-          dateofbirth: z.number().min(1).max(31),
-          monthofbirth: z.number().min(0).max(11),
-          yearofbirth: z.number().min(1925).max(new Date().getFullYear()),
-        })
-        .readonly(),
+      onChange: z.object({
+        email: z.email({
+          message: "Enter a valid email",
+        }),
+        password: z.string().min(6, {
+          message: "Password must be at least 6 characters",
+        }),
+        username: z.string().min(3, {
+          message: "Username must be at least 3 characters",
+        }),
+        displayName: z.string().min(3, {
+          message: "Display Name must be at least 3 characters",
+        }),
+        dateofbirth: z.number().min(1).max(31),
+        monthofbirth: z.number().min(0).max(11),
+        yearofbirth: z.number().min(1925).max(new Date().getFullYear()),
+      }),
     },
     onSubmit: function ({ value }) {
       registerUser({
@@ -68,7 +67,6 @@ export default function Register() {
           <Icons.sphere className="w-16 h-16 mb-2 transition-transform duration-300 group-hover:-translate-y-4" />
         </Link>
 
-        <Icons.sphere className="w-16 h-16" />
         <h2 className="text-3xl font-bold">Create Account</h2>
         <registerForm.AppField name="username">
           {(field) => (
@@ -171,19 +169,14 @@ export default function Register() {
           {(field) => (
             <div className="grid w-full max-w-sm items-center gap-3">
               <Label htmlFor="dateofbirth">Date of Birth</Label>
-              <field.Input
-                placeholder="Enter dateofbirth"
-                id="dateofbirth"
-                name="dateofbirth"
-                onBlur={field.handleBlur}
-                value={field.state.value}
-                type="number"
-                onChange={(e) => {
-                  console.log(e.target.value);
-                  field.handleChange(parseInt(e.target.value));
-                }}
-                className="border-primary/40"
-              />
+              <field.Select>
+                <SelectTrigger className="border-primary/40">
+                  <SelectValue placeholder="Select Date" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 31 }, (_, i) => 1 + i).map((date, index) => <SelectItem key={index} value={date}>{date}</SelectItem>)}
+                </SelectContent>
+              </field.Select>
               {!field.state.meta.isValid ? (
                 <em role="alert" className="text-red-400">
                   {field.state.meta.errors[0]?.message}
