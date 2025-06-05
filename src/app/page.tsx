@@ -8,7 +8,6 @@ import Image from "next/image";
 export default function Home() {
   return (
     <>
-      <div className="gradient">
         <Header />
         <div className="flex flex-col justify-center h-full items-center gap-8 mx-20 py-20">
           <section className="text-7xl font-extrabold text-center mb-2 mt-16">
@@ -30,7 +29,9 @@ export default function Home() {
             </Button>
           </section>
         </div>
+      <div className="gradient absolute top-0 h-[800] w-full -z-10">
       </div>
+
       <main className="flex flex-col gap-8 row-start-2 items-center my-6">
         <section>
           <Image
