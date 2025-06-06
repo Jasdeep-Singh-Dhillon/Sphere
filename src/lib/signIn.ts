@@ -10,5 +10,14 @@ export async function googleSignIn() {
 }
 
 export async function credentialSignIn(email: string, password: string) {
-  await signIn("credentials", { email, password, redirectTo: "/hub" });
+  try {
+    await signIn("credentials", {
+      email,
+      password,
+      redirectTo: "/hub",
+    });
+  } catch (error) {
+    console.log(error);
+    return { message: "Invalid Credentials" };
+  }
 }

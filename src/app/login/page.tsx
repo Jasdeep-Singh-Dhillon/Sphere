@@ -5,12 +5,18 @@ import { Input } from "@/components/ui/input";
 import { credentialSignIn, githubSignIn, googleSignIn } from "@/lib/signIn";
 import Link from "next/link";
 
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 
 export default function Login() {
-  async function signWithPassword(e: FormEvent) {
-    e.preventDefault();
-    console.log(e);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
+  async function signWithPassword(event: FormEvent) {
+    event.preventDefault();
+
+    const { message } = await credentialSignIn(
+      event.target[0].value,
+      event.target[1].value,
+    );
+    setErrorMessage(message);
   }
   return (
     <div className="gradient h-dvh min-h-screen w-full flex items-center justify-center ">
@@ -61,15 +67,8 @@ export default function Login() {
           <div className="flex-grow h-px"></div>
         </div>
 
-        <form
-          className="w-full"
-          onSubmit={async (event) => {
-            event.preventDefault();
-            
-            await credentialSignIn(event.target[0].value, event.target[1].value);
-          }}
-        >
-          <div className="mb-5">
+        <form className="w-full flex flex-col justify-center items-center" onSubmit={signWithPassword}>
+          <div className="mb-5 w-full">
             <label htmlFor="email" className="block font-semibold mb-2 ">
               Email
             </label>
@@ -81,7 +80,7 @@ export default function Login() {
               required
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-2 w-full">
             <label htmlFor="password" className="block font-semibold mb-2 ">
               Password
             </label>
@@ -93,6 +92,17 @@ export default function Login() {
               required
             />
           </div>
+
+            <div className="mb-4">
+          {errorMessage ? (
+              <em role="alert" className="text-red-400">
+                {errorMessage}
+              </em>
+          ) : (
+            ""
+          )}
+            </div>
+
           <Button
             variant={"secondary"}
             type="submit"

@@ -10,6 +10,7 @@ import * as argon2 from "argon2";
 import { z, ZodError } from "zod/v4";
 import { api } from "../../convex/_generated/api";
 import { ConvexHttpClient } from "convex/browser";
+import { redirect } from "next/navigation";
 
 export class CustomAuthError extends AuthError {
   constructor(msg: string) {
@@ -53,7 +54,8 @@ const Password = CredentialsProvider({
       if (!match) throw new CustomAuthError("Invalid credentials");
       return user;
     } catch (error: unknown) {
-      if (error instanceof ZodError) throw new CustomAuthError("Invalid Credentials");
+      if (error instanceof ZodError)
+        throw new CustomAuthError("Invalid Credentials");
       throw new CustomAuthError("Auth Failed");
     }
   },
