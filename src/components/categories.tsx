@@ -16,6 +16,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 export function Categories({
   categories,
@@ -54,7 +55,7 @@ export function Categories({
                     {category?.channels.map((channel) => (
                       <SidebarMenuSubItem key={channel.id}>
                         <SidebarMenuSubButton asChild>
-                          <a href={channel.id}><MessagesSquare/>{channel.title}</a>
+                          <Link href={`/hub/${channel.id}`}><MessagesSquare/>{channel.title}</Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}

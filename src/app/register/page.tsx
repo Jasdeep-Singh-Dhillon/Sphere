@@ -1,18 +1,21 @@
 "use client";
 import { Label } from "@/components/ui/label";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { z } from "zod/v4";
 import useAppForm from "@/lib/appForm";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
-import { redirect } from "next/navigation";
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import signUp from "@/lib/signUp";
 
 export default function Register() {
-  const registerUser = useMutation(api.mutation.registerUser);
+  const [formError, setFormError] = useState("");
   const registerForm = useAppForm({
     defaultValues: {
       email: "",
@@ -20,11 +23,11 @@ export default function Register() {
       username: "",
       displayName: "",
       dateofbirth: 12,
-      monthofbirth: undefined,
-      yearofbirth: undefined,
-    },
+      monthofbirth: 11,
+      yearofbirth: 2020,
+  },
     validators: {
-      onChange: z.object({
+      onSubmit: z.object({
         email: z.email({
           message: "Enter a valid email",
         }),
@@ -42,14 +45,14 @@ export default function Register() {
         yearofbirth: z.number().min(1925).max(new Date().getFullYear()),
       }),
     },
-    onSubmit: function ({ value }) {
-      registerUser({
-        username: value.username,
-        displayName: value.displayName,
-        email: value.email,
-        password: value.password,
-      });
-      redirect("/login");
+    onSubmit: async function ({ value }) {
+      const result = await signUp(value);
+      console.log("HEre", result);
+      if (!result) {
+        setFormError("Email or Username already in use");
+      } else {
+        setFormError("");
+      }
     },
   });
   function formSubmit(e: FormEvent<HTMLFormElement>) {
@@ -68,6 +71,7 @@ export default function Register() {
         </Link>
 
         <h2 className="text-3xl font-bold">Create Account</h2>
+
         <registerForm.AppField name="username">
           {(field) => (
             <div className="grid w-full max-w-sm items-center gap-3">
@@ -171,10 +175,19 @@ export default function Register() {
               <Label htmlFor="dateofbirth">Date of Birth</Label>
               <field.Select>
                 <SelectTrigger className="border-primary/40">
-                  <SelectValue placeholder="Select Date" />
+                  <SelectValue
+                    placeholder="Select Date"
+                    defaultValue={field.state.value}
+                  />
                 </SelectTrigger>
                 <SelectContent>
-                  {Array.from({ length: 31 }, (_, i) => 1 + i).map((date, index) => <SelectItem key={index} value={date}>{date}</SelectItem>)}
+                  {Array.from({ length: 31 }, (_, i) => 1 + i).map(
+                    (date, index) => (
+                      <SelectItem key={index} value={`${date}`}>
+                        {date}
+                      </SelectItem>
+                    ),
+                  )}
                 </SelectContent>
               </field.Select>
               {!field.state.meta.isValid ? (
@@ -188,8 +201,19 @@ export default function Register() {
           )}
         </registerForm.AppField>
 
+        {formError !== "" ? (
+          <div>
+            <em role="alert" className="text-red-400">
+              {formError}
+            </em>
+          </div>
+        ) : (
+          ""
+        )}
+
         <registerForm.AppForm>
           <registerForm.Button
+            type="submit"
             variant={"secondary"}
             className="bg-accent grid w-full max-w-sm items-center gap-3 hover:bg-accent/50"
           >

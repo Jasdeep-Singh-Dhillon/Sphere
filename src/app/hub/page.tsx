@@ -1,7 +1,8 @@
 import { Icons } from "@/components/icons";
 import { Input } from "@/components/ui/input";
 
-export default function Hub() {
+export default  function Hub() {
+  
   const messages = [
     {
       messageId: "1",

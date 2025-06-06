@@ -1,11 +1,17 @@
+"use client";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuthActions } from "@convex-dev/auth/react";
+import { credentialSignIn, githubSignIn, googleSignIn } from "@/lib/signIn";
 import Link from "next/link";
 
+import { FormEvent } from "react";
+
 export default function Login() {
-  const { signIn } = useAuthActions();
+  async function signWithPassword(e: FormEvent) {
+    e.preventDefault();
+    console.log(e);
+  }
   return (
     <div className="gradient h-dvh min-h-screen w-full flex items-center justify-center ">
       <div className=" p-10 rounded-2xl shadow-2xl w-full max-w-md flex flex-col items-center bg-background/60 ">
@@ -17,14 +23,13 @@ export default function Login() {
         <p className="mb-6 text-center w-full">
           Welcome back! Please enter your credentials.
         </p>
-
         {/* Social Login Buttons with Icons */}
         <div className="w-full flex flex-col gap-3 mb-6">
           <Button
             type="button"
-            className="flex items-center justify-center gap-2 w-full py-2 rounded-lg border font-semibold"
+            className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
             onClick={async () => {
-              signIn("google");
+              await googleSignIn();
             }}
           >
             <Icons.google className="w-5 h-5" />
@@ -32,15 +37,18 @@ export default function Login() {
           </Button>
           <Button
             type="button"
-            className="flex items-center justify-center gap-2 w-full py-2 rounded-lg border font-semibold"
+            className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
           >
             <Icons.apple className="w-5 h-5" />
             Continue with Apple
           </Button>
+
           <Button
-            type="button"
-            className="flex items-center justify-center gap-2 w-full py-2 rounded-lg border font-semibold"
-            onClick={() => void signIn("github")}
+            type="submit"
+            className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
+            onClick={async () => {
+              await githubSignIn();
+            }}
           >
             <Icons.gitHub className="w-5 h-5" />
             Continue with GitHub
@@ -53,15 +61,22 @@ export default function Login() {
           <div className="flex-grow h-px"></div>
         </div>
 
-        <form action="/login" method="POST" className="w-full">
+        <form
+          className="w-full"
+          onSubmit={async (event) => {
+            event.preventDefault();
+            
+            await credentialSignIn(event.target[0].value, event.target[1].value);
+          }}
+        >
           <div className="mb-5">
-            <label htmlFor="username" className="block font-semibold mb-2 ">
-              Username
+            <label htmlFor="email" className="block font-semibold mb-2 ">
+              Email
             </label>
             <Input
               type="text"
-              name="username"
-              id="username"
+              name="email"
+              id="email"
               className="w-full px-4 py-2 border-primary/40 rounded-lg focus:outline-none focus:ring-2"
               required
             />
@@ -81,18 +96,17 @@ export default function Login() {
           <Button
             variant={"secondary"}
             type="submit"
-            className="w-full bg-accent text-white py-3 rounded-lg font-bold"
+            className="w-full bg-accent text-white py-3 hover:bg-accent/90 rounded-lg font-bold"
           >
             Login
           </Button>
           <div className="flex justify-between items-center text-sm mt-4">
-            <a href="#" className="hover:underline">
+            <Link href="#" className="hover:underline">
               Forgot Password?
-            </a>
-
-            <a href="/register" className="hover:underline">
+            </Link>
+            <Link href="/register" className="hover:underline">
               Create Account
-            </a>
+            </Link>
           </div>
         </form>
       </div>

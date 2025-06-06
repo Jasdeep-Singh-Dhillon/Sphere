@@ -23,12 +23,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-
-const user = {
-  name: "Arc",
-  email: "arc@mail.com",
-  avatar: "link",
-};
+import { type Session } from "next-auth";
 const serverOptions = [
   {
     name: "Invite People",
@@ -153,9 +148,9 @@ const categories = [
   },
 ];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ session }: { session: Session}) {
   return (
-    <Sidebar  {...props}>
+    <Sidebar>
       <SidebarHeader>
         <ServerOptions serverOptions={serverOptions} />
       </SidebarHeader>
@@ -163,7 +158,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <Categories categories={categories} />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarUser user={user} />
+        <SidebarUser user={session.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

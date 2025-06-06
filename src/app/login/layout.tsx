@@ -1,7 +1,8 @@
-"use client";
-import { ConvexAuthNextProvider } from "@/components/convexClientProvider";
+import { ConvexClientProvider } from "@/components/convexClientProvider";
+import { auth } from "@/lib/auth";
 import { ReactNode } from "react";
 
-export default function Layout({ children }: { children: ReactNode }) {
-  return <ConvexAuthNextProvider>{children}</ConvexAuthNextProvider>;
+export default async function Layout({ children }: { children: ReactNode }) {
+  const session = await auth();
+  return <ConvexClientProvider session={session}>{children}</ConvexClientProvider>;
 }
