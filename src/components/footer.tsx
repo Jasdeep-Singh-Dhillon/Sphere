@@ -1,4 +1,4 @@
-import { Icons } from "../icons";
+import { Icons } from "./icons";
 import { Pacifico } from "next/font/google";
 
 const pacifico = Pacifico({
@@ -18,13 +18,13 @@ export default function Footer() {
       <div className="py-6 ">
         {/* <span className="text-lg py-4 me-4">Made by</span> */}
         <ul className="flex flex-wrap list-none gap-2 items-center">
-          <li className="bg-background px-4 py-2 rounded-[4vw]">
+          <li className="bg-background/70 px-4 py-2 rounded-[4vw] hover:bg-background">
             Jasdeep Singh Dhillon
           </li>
-          <li className="bg-background px-4 py-2 rounded-[4vw]">
+          <li className="bg-background/70 hover:bg-background px-4 py-2 rounded-[4vw]">
             Diksha Smotra
           </li>
-          <li className="bg-background px-4 py-2 rounded-[4vw]">
+          <li className="bg-background/70 hover:bg-background px-4 py-2 rounded-[4vw]">
             Krish Lavani
           </li>
         </ul>
