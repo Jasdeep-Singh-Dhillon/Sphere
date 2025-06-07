@@ -16,7 +16,7 @@ export default function Header() {
         <Icons.sphere className="h-16 w-16" />
         <span className={`text-4xl ${pacifico.className}`}>Sphere</span>
       </div>
-      <Button variant="secondary" className="bg-accent">
+      <Button variant="accent" asChild>
         <Link href={"/login"}>Login</Link>
       </Button>
     </header>

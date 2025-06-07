@@ -67,7 +67,10 @@ export default function Login() {
           <div className="flex-grow h-px"></div>
         </div>
 
-        <form className="w-full flex flex-col justify-center items-center" onSubmit={signWithPassword}>
+        <form
+          className="w-full flex flex-col justify-center items-center"
+          onSubmit={signWithPassword}
+        >
           <div className="mb-5 w-full">
             <label htmlFor="email" className="block font-semibold mb-2 ">
               Email
@@ -93,27 +96,28 @@ export default function Login() {
             />
           </div>
 
-            <div className="mb-4">
-          {errorMessage ? (
+          <div className="mb-4">
+            {errorMessage ? (
               <em role="alert" className="text-red-400">
                 {errorMessage}
               </em>
-          ) : (
-            ""
-          )}
-            </div>
+            ) : (
+              ""
+            )}
+          </div>
 
           <Button
-            variant={"secondary"}
+            variant={"accent"}
             type="submit"
-            className="w-full bg-accent text-white py-3 hover:bg-accent/90 rounded-lg font-bold"
+            className="w-full text-white py-3 rounded-lg font-bold"
           >
             Login
           </Button>
-          <div className="flex justify-between items-center text-sm mt-4">
+          <div className="flex w-full justify-between items-center text-sm mt-4">
             <Link href="#" className="hover:underline">
               Forgot Password?
             </Link>
+
             <Link href="/register" className="hover:underline">
               Create Account
             </Link>

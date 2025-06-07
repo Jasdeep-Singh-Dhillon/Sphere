@@ -1,3 +1,4 @@
+/* eslint-disable */
 import type {
   Adapter,
   AdapterAccount,
@@ -7,7 +8,7 @@ import type {
   VerificationToken,
 } from "@auth/core/adapters";
 import { fetchMutation, fetchQuery } from "convex/nextjs";
-import {  FunctionArgs, FunctionReference } from "convex/server";
+import { FunctionArgs, FunctionReference } from "convex/server";
 import { api } from "../../convex/_generated/api";
 import { Doc, Id } from "../../convex/_generated/dataModel";
 import { env } from "./env";

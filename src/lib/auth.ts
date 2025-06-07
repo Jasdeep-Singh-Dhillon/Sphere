@@ -10,7 +10,6 @@ import * as argon2 from "argon2";
 import { z, ZodError } from "zod/v4";
 import { api } from "../../convex/_generated/api";
 import { ConvexHttpClient } from "convex/browser";
-import { redirect } from "next/navigation";
 
 export class CustomAuthError extends AuthError {
   constructor(msg: string) {
