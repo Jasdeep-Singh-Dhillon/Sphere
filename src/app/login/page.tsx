@@ -10,19 +10,24 @@ import { redirect } from "next/navigation";
 import { FormEvent, useState } from "react";
 import z from "zod/v4";
 
-function ErrorMessage({ message }: { message: string }) {
+function ErrorMessage({ message }: { message: string | undefined }) {
+  if (!message) {
+    return (
+      <em role="alert" className="text-red-400">
+        Invalid Credentials
+      </em>
+    );
+  }
   if (message === "Hub") redirect("/hub");
   return (
     <em role="alert" className="text-red-400">
       {message}
     </em>
   );
-
-  return;
 }
 
 export default function Login() {
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
 
   const loginForm = useAppForm({
     defaultValues: {
