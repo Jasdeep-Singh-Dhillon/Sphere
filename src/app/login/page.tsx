@@ -12,11 +12,7 @@ import z from "zod/v4";
 
 function ErrorMessage({ message }: { message: string | undefined }) {
   if (!message) {
-    return (
-      <em role="alert" className="text-red-400">
-        Invalid Credentials
-      </em>
-    );
+    return "";
   }
   if (message === "Hub") redirect("/hub");
   return (
