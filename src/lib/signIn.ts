@@ -1,5 +1,6 @@
 "use server";
 
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { signIn } from "./auth";
 
 export async function githubSignIn() {
@@ -17,7 +18,8 @@ export async function credentialSignIn(email: string, password: string) {
       redirectTo: "/hub",
     });
   } catch (error) {
-    console.log(error);
-    return { message: "Invalid Credentials" };
-  }
+    if (isRedirectError(error)) return "Hub";
+    console.log(error, "Returning Invalid");
+    return "Invalid Credentials";
+  } 
 }

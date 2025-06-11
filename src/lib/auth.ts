@@ -1,6 +1,6 @@
 "server-only";
 import { SignJWT, importPKCS8 } from "jose";
-import NextAuth, { AuthError } from "next-auth";
+import NextAuth, { AuthError, NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
@@ -20,7 +20,6 @@ export class CustomAuthError extends AuthError {
 }
 
 const Password = CredentialsProvider({
-  name: "credentials",
   credentials: {
     email: { type: "email", label: "Email", placeholder: "Enter email" },
     password: {
@@ -29,7 +28,7 @@ const Password = CredentialsProvider({
       placeholder: "Enter password",
     },
   },
-  authorize: async function authorize(credentials) {
+  authorize: async function (credentials) {
     try {
       const schema = z.object({
         email: z.email("Please enter a valid email address"),
@@ -42,16 +41,16 @@ const Password = CredentialsProvider({
           email: parsedCredentials.email,
         },
       );
-      if (!user) throw new CustomAuthError("Invalid Credentials");
-
-      let passwordHash = await argon2.hash(parsedCredentials.password, {
-        hashLength: 50,
-      });
-      passwordHash = parsedCredentials.password;
-      const match = await argon2.verify(user?.password || "", passwordHash);
-      console.log("Match", match);
-      if (!match) throw new CustomAuthError("Invalid credentials");
-      return user;
+      if (user) {
+        let passwordHash = await argon2.hash(parsedCredentials.password, {
+          hashLength: 50,
+        });
+        passwordHash = parsedCredentials.password;
+        const match = await argon2.verify(user?.password || "", passwordHash);
+        if (!match) throw new CustomAuthError("Invalid credentials");
+        return { ...user, image: user.image ?? undefined };
+      }
+      return null;
     } catch (error: unknown) {
       if (error instanceof ZodError)
         throw new CustomAuthError("Invalid Credentials");
@@ -60,7 +59,7 @@ const Password = CredentialsProvider({
   },
 });
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+const authConfig = {
   providers: [Github, Google, Password],
   session: {
     strategy: "jwt",
@@ -70,7 +69,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    async session({ session }) {
+    session: async function ({ session }) {
       const privateKey = await importPKCS8(
         process.env.CONVEX_AUTH_PRIVATE_KEY!,
         "RS256",
@@ -87,7 +86,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return { ...session, convexToken };
     },
   },
-});
+} satisfies NextAuthConfig;
+
+export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
 
 export { handlers as GET, handlers as POST };
 
@@ -96,6 +97,6 @@ declare module "next-auth" {
     convexToken: string;
   }
   interface User {
-    displayName: string;
+    image: string | undefined;
   }
 }

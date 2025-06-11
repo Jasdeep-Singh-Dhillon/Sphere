@@ -1,5 +1,3 @@
-"server only";
-
 import { defineSchema, defineTable } from "convex/server";
 import { Validator, v } from "convex/values";
 
@@ -16,12 +14,12 @@ import { Validator, v } from "convex/values";
 // };
 
 export const userSchema = {
-  email: v.string(),
   name: v.optional(v.string()),
+  email: v.string(),
+  username: v.optional(v.string()),
   emailVerified: v.optional(v.number()),
   image: v.optional(v.string()),
   password: v.optional(v.string()),
-  displayName: v.optional(v.string())
 };
 
 export const sessionSchema = {

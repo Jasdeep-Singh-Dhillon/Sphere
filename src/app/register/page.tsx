@@ -20,25 +20,26 @@ export default function Register() {
     defaultValues: {
       email: "",
       password: "",
+      // confirmpassword: "",
+      name: "",
       username: "",
-      displayName: "",
       dateofbirth: 12,
       monthofbirth: 11,
       yearofbirth: 2020,
-  },
+    },
     validators: {
       onSubmit: z.object({
         email: z.email({
-          message: "Enter a valid email",
+          error: "Enter a valid email address",
         }),
         password: z.string().min(6, {
-          message: "Password must be at least 6 characters",
+          error: "Password must be at least 6 characters",
+        }),
+        name: z.string().min(3, {
+          error: "Name must be at least 3 characters",
         }),
         username: z.string().min(3, {
-          message: "Username must be at least 3 characters",
-        }),
-        displayName: z.string().min(3, {
-          message: "Display Name must be at least 3 characters",
+          error: "User Name must be at least 3 characters",
         }),
         dateofbirth: z.number().min(1).max(31),
         monthofbirth: z.number().min(0).max(11),
@@ -47,7 +48,6 @@ export default function Register() {
     },
     onSubmit: async function ({ value }) {
       const result = await signUp(value);
-      console.log("HEre", result);
       if (!result) {
         setFormError("Email or Username already in use");
       } else {
@@ -55,8 +55,8 @@ export default function Register() {
       }
     },
   });
-  function formSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  function formSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     registerForm.handleSubmit();
   }
   return (
@@ -96,14 +96,14 @@ export default function Register() {
           )}
         </registerForm.AppField>
 
-        <registerForm.AppField name="displayName">
+        <registerForm.AppField name="name">
           {(field) => (
             <div className="grid w-full max-w-sm items-center gap-3">
               <Label htmlFor="displayname">Display Name</Label>
               <field.Input
                 placeholder="Enter displayname"
-                id="displayname"
-                name="displayName"
+                id="name"
+                name="name"
                 onBlur={field.handleBlur}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
@@ -152,6 +152,7 @@ export default function Register() {
                 placeholder="Enter password"
                 id="password"
                 name="password"
+                type="password"
                 onBlur={field.handleBlur}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}

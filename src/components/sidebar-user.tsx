@@ -22,16 +22,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import SignoutServer from "@/lib/signOut";
+import { type User } from "next-auth";
 
-export function SidebarUser({
-  user,
-}: {
-  user: {
-    name: string | undefined | null;
-    email: string;
-    image: string;
-  };
-}) {
+export function SidebarUser({ user }: { user: User | undefined }) {
   const { isMobile } = useSidebar();
 
   return (
@@ -44,12 +37,12 @@ export function SidebarUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.image} />
+                <AvatarImage src={user?.image} />
                 <AvatarFallback className="rounded-lg"></AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-medium">{user?.name}</span>
+                <span className="truncate text-xs">{user?.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -64,14 +57,14 @@ export function SidebarUser({
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={user.image}
-                    alt={user.name ?? "Account Name"}
+                    src={user?.image}
+                    alt={user?.name ?? "Account Name"}
                   />
                   <AvatarFallback className="rounded-lg"></AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-medium">{user?.name}</span>
+                  <span className="truncate text-xs">{user?.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

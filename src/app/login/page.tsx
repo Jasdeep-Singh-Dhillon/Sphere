@@ -1,22 +1,58 @@
 "use client";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import useAppForm from "@/lib/appForm";
 import { credentialSignIn, githubSignIn, googleSignIn } from "@/lib/signIn";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { FormEvent, useState } from "react";
+import z from "zod/v4";
+
+function ErrorMessage({ message }: { message: string }) {
+  if (message === "Hub") redirect("/hub");
+  return (
+    <em role="alert" className="text-red-400">
+      {message}
+    </em>
+  );
+
+  return;
+}
 
 export default function Login() {
-  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
-  async function signWithPassword(event: FormEvent) {
-    event.preventDefault();
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const { message } = await credentialSignIn(
-      event.target[0].value,
-      event.target[1].value,
-    );
-    setErrorMessage(message);
+  const loginForm = useAppForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    validators: {
+      onSubmit: z.object({
+        email: z
+          .email({
+            message: "Enter a valid email address",
+          })
+          .min(1, {
+            message: "Email is required",
+          }),
+        password: z.string().min(1, {
+          message: "Password is required",
+        }),
+      }),
+    },
+    onSubmit: async function ({ value }) {
+      const result = await credentialSignIn(value.email, value.password);
+      console.log(result);
+      setErrorMessage(result);
+    },
+  });
+
+  function formSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    loginForm.handleSubmit();
   }
   return (
     <div className="gradient h-dvh min-h-screen w-full flex items-center justify-center ">
@@ -68,43 +104,59 @@ export default function Login() {
         </div>
 
         <form
-          className="w-full flex flex-col justify-center items-center"
-          onSubmit={signWithPassword}
+          className="w-full flex flex-col justify-center items-center gap-4"
+          onSubmit={formSubmit}
         >
-          <div className="mb-5 w-full">
-            <label htmlFor="email" className="block font-semibold mb-2 ">
-              Email
-            </label>
-            <Input
-              type="text"
-              name="email"
-              id="email"
-              className="w-full px-4 py-2 border-primary/40 rounded-lg focus:outline-none focus:ring-2"
-              required
-            />
-          </div>
-          <div className="mb-2 w-full">
-            <label htmlFor="password" className="block font-semibold mb-2 ">
-              Password
-            </label>
-            <Input
-              type="password"
-              name="password"
-              id="password"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-primary/40 "
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            {errorMessage ? (
-              <em role="alert" className="text-red-400">
-                {errorMessage}
-              </em>
-            ) : (
-              ""
+          <loginForm.AppField name="email">
+            {(field) => (
+              <div className="grid w-full max-w-sm items-center gap-3">
+                <Label htmlFor="email">Email</Label>
+                <field.Input
+                  placeholder="Enter Email"
+                  id="email"
+                  name="email"
+                  onBlur={field.handleBlur}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  type="text"
+                  className="border-primary/40"
+                />
+                {!field.state.meta.isValid ? (
+                  <em role="alert" className="text-red-400">
+                    {field.state.meta.errors[0]?.message}
+                  </em>
+                ) : (
+                  ""
+                )}
+              </div>
             )}
-          </div>
+          </loginForm.AppField>
+          <loginForm.AppField name="password">
+            {(field) => (
+              <div className="grid w-full max-w-sm items-center gap-3">
+                <Label htmlFor="password">Password</Label>
+                <field.Input
+                  placeholder="Enter password"
+                  id="password"
+                  name="password"
+                  onBlur={field.handleBlur}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  type="password"
+                  className="border-primary/40"
+                />
+                {!field.state.meta.isValid ? (
+                  <em role="alert" className="text-red-400">
+                    {field.state.meta.errors[0]?.message}
+                  </em>
+                ) : (
+                  ""
+                )}
+              </div>
+            )}
+          </loginForm.AppField>
+
+          <div className="mb-4">{<ErrorMessage message={errorMessage} />}</div>
 
           <Button
             variant={"accent"}
