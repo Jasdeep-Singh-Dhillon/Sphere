@@ -5,7 +5,7 @@ import {
   CreditCard,
   LogOut,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,17 +14,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "~/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar";
-import SignoutServer from "@/lib/signOut";
-import { type User } from "next-auth";
+} from "~/components/ui/sidebar";
 
-export function SidebarUser({ user }: { user: User | undefined }) {
+export function SidebarUser({ user }: { user: { name: string; email: string; image?: string } }) {
   const { isMobile } = useSidebar();
 
   return (
@@ -87,7 +85,7 @@ export function SidebarUser({ user }: { user: User | undefined }) {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                SignoutServer();
+                console.log("Sign out clicked");
               }}
             >
               <LogOut />

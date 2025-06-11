@@ -1,30 +1,14 @@
 "use client";
-import { Icons } from "@/components/icons";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import useAppForm from "@/lib/appForm";
-import { credentialSignIn, githubSignIn, googleSignIn } from "@/lib/signIn";
+import { Icons } from "~/components/ui/icons";
+import { Button } from "~/components/ui/button";
+import { Label } from "~/components/ui/label";
+import useAppForm from "~/lib/app-form";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent } from "react";
 import z from "zod/v4";
 
-function ErrorMessage({ message }: { message: string | undefined }) {
-  if (!message) {
-    return "";
-  }
-  if (message === "Hub") redirect("/hub");
-  return (
-    <em role="alert" className="text-red-400">
-      {message}
-    </em>
-  );
-}
-
 export default function Login() {
-  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
-
   const loginForm = useAppForm({
     defaultValues: {
       email: "",
@@ -45,9 +29,7 @@ export default function Login() {
       }),
     },
     onSubmit: async function ({ value }) {
-      const result = await credentialSignIn(value.email, value.password);
-      console.log(result);
-      setErrorMessage(result);
+      console.log(value);
     },
   });
 
@@ -71,8 +53,8 @@ export default function Login() {
           <Button
             type="button"
             className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
-            onClick={async () => {
-              await googleSignIn();
+            onClick={() => {
+              console.log("Google Sign In Clicked");
             }}
           >
             <Icons.google className="w-5 h-5" />
@@ -81,6 +63,9 @@ export default function Login() {
           <Button
             type="button"
             className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
+            onClick={() => {
+              console.log("Apple Sign In Clicked");
+            }}
           >
             <Icons.apple className="w-5 h-5" />
             Continue with Apple
@@ -89,8 +74,8 @@ export default function Login() {
           <Button
             type="submit"
             className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
-            onClick={async () => {
-              await githubSignIn();
+            onClick={() => {
+              console.log("GitHub Sign In Clicked");
             }}
           >
             <Icons.gitHub className="w-5 h-5" />
@@ -118,7 +103,9 @@ export default function Login() {
                   name="email"
                   onBlur={field.handleBlur}
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    field.handleChange(e.target.value)
+                  }
                   type="text"
                   className="border-primary/40"
                 />
@@ -142,7 +129,9 @@ export default function Login() {
                   name="password"
                   onBlur={field.handleBlur}
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    field.handleChange(e.target.value)
+                  }
                   type="password"
                   className="border-primary/40"
                 />
@@ -156,8 +145,6 @@ export default function Login() {
               </div>
             )}
           </loginForm.AppField>
-
-          <div className="mb-4">{<ErrorMessage message={errorMessage} />}</div>
 
           <Button
             variant={"accent"}

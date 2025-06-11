@@ -1,21 +1,19 @@
 "use client";
-import { Label } from "@/components/ui/label";
+import { Label } from "~/components/ui/label";
 import { FormEvent, useState } from "react";
 import { z } from "zod/v4";
-import useAppForm from "@/lib/appForm";
-import { Button } from "@/components/ui/button";
+import useAppForm from "~/lib/app-form";
+import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import { Icons } from "@/components/icons";
+import { Icons } from "~/components/ui/icons";
 import {
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import signUp from "@/lib/signUp";
+} from "~/components/ui/select";
 
 export default function Register() {
-  const [formError, setFormError] = useState("");
   const registerForm = useAppForm({
     defaultValues: {
       email: "",
@@ -47,12 +45,7 @@ export default function Register() {
       }),
     },
     onSubmit: async function ({ value }) {
-      const result = await signUp(value);
-      if (!result) {
-        setFormError("Email or Username already in use");
-      } else {
-        setFormError("");
-      }
+      console.log(value);
     },
   });
   function formSubmit(event: FormEvent<HTMLFormElement>) {
@@ -187,7 +180,7 @@ export default function Register() {
                       <SelectItem key={index} value={`${date}`}>
                         {date}
                       </SelectItem>
-                    ),
+                    )
                   )}
                 </SelectContent>
               </field.Select>
@@ -201,16 +194,6 @@ export default function Register() {
             </div>
           )}
         </registerForm.AppField>
-
-        {formError !== "" ? (
-          <div>
-            <em role="alert" className="text-red-400">
-              {formError}
-            </em>
-          </div>
-        ) : (
-          ""
-        )}
 
         <registerForm.AppForm>
           <registerForm.Button

@@ -1,36 +1,35 @@
-import Features from "@/components/features";
-import { Button } from "@/components/ui/button";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
+import Features from "~/components/home/features";
+import { Button } from "~/components/ui/button";
+import Footer from "~/components/home/footer";
+import Header from "~/components/home/header";
 import { CirclePlay, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
 export default function Home() {
   return (
     <>
-        <Header />
-        <div className="flex flex-col justify-center h-full items-center gap-8 mx-20 py-20">
-          <section className="text-7xl font-extrabold text-center mb-2 mt-16">
-            <span className="bg-clip-text text-black/60">Connect</span> in your
-            digital sphere
-          </section>
-          <section className="text-2xl text-center w-7/10 mb-16">
-            Experience seamless communication with crystal clear voice, instant
-            messaging and immersive communities. Built for everyone.
-          </section>
-          <section className="flex flex-col gap-2 justify-center items-center">
-            <Button variant="default" >
-              Get started now
-              <ChevronRight />
-            </Button>
-            <Button variant="outline" className="w-full">
-              Demo
-              <CirclePlay />
-            </Button>
-          </section>
-        </div>
-      <div className="gradient absolute top-0 h-[800] w-full -z-10">
+      <Header />
+      <div className="flex flex-col justify-center h-full items-center gap-8 mx-20 py-20">
+        <section className="text-7xl font-extrabold text-center mb-2 mt-16">
+          <span className="bg-clip-text text-black/60">Connect</span> in your
+          digital sphere
+        </section>
+        <section className="text-2xl text-center w-7/10 mb-16">
+          Experience seamless communication with crystal clear voice, instant
+          messaging and immersive communities. Built for everyone.
+        </section>
+        <section className="flex flex-col gap-2 justify-center items-center">
+          <Button variant="default">
+            Get started now
+            <ChevronRight />
+          </Button>
+          <Button variant="outline" className="w-full">
+            Demo
+            <CirclePlay />
+          </Button>
+        </section>
       </div>
+      <div className="gradient absolute top-0 h-[800] w-full -z-10"></div>
 
       <main className="flex flex-col gap-8 row-start-2 items-center my-6">
         <section>

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Video, MonitorCog, Gauge, Images, ShieldUser } from "lucide-react";
 
 export default function Features() {
@@ -27,11 +27,7 @@ export default function Features() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p>
-            {
-              "Accessible on every platform with seamless sync."
-            }
-          </p>
+          <p>{"Accessible on every platform with seamless sync."}</p>
         </CardContent>
       </Card>
       <Card className="hover:bg-foreground/10 backdrop-blur-xs p-4 rounded-lg">
