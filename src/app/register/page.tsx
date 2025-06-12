@@ -1,62 +1,104 @@
 "use client";
-import { Label } from "@/components/ui/label";
+import { Label } from "~/components/ui/label";
 import { FormEvent, useState } from "react";
 import { z } from "zod/v4";
-import useAppForm from "@/lib/appForm";
-import { Button } from "@/components/ui/button";
+import useAppForm from "~/lib/app-form";
+import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import { Icons } from "@/components/icons";
+import { Icons } from "~/components/ui/icons";
 import {
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import signUp from "@/lib/signUp";
+} from "~/components/ui/select";
+import { signUp } from "~/lib/auth-client";
+import { Loader2Icon } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default function Register() {
-  const [formError, setFormError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [registerError, setRegisterError] = useState<string | undefined>();
   const registerForm = useAppForm({
     defaultValues: {
       email: "",
       password: "",
-      // confirmpassword: "",
+      confirmpassword: "",
       name: "",
-      username: "",
       dateofbirth: 12,
       monthofbirth: 11,
       yearofbirth: 2020,
     },
     validators: {
+      onChange: z.object({
+        name: z.string().min(1, { error: "Name is required" }),
+        email: z.string({ error: "Email is required" }),
+        password: z.string({ error: "Password is required" }),
+        confirmpassword: z.string(),
+        dateofbirth: z.number(),
+        monthofbirth: z.number(),
+        yearofbirth: z.number(),
+      }),
       onSubmit: z.object({
-        email: z.email({
-          error: "Enter a valid email address",
-        }),
-        password: z.string().min(6, {
-          error: "Password must be at least 6 characters",
-        }),
-        name: z.string().min(3, {
-          error: "Name must be at least 3 characters",
-        }),
-        username: z.string().min(3, {
-          error: "User Name must be at least 3 characters",
-        }),
+        email: z.email({ error: "Enter a valid email address" }),
+        password: z
+          .string()
+          .min(6, { error: "Password must be at least 6 characters" }),
+        name: z
+          .string()
+          .min(3, { error: "Name must be at least 3 characters" }),
+        confirmpassword: z.string(),
         dateofbirth: z.number().min(1).max(31),
         monthofbirth: z.number().min(0).max(11),
         yearofbirth: z.number().min(1925).max(new Date().getFullYear()),
       }),
     },
-    onSubmit: async function ({ value }) {
-      const result = await signUp(value);
-      if (!result) {
-        setFormError("Email or Username already in use");
-      } else {
-        setFormError("");
+    onSubmit: async function ({
+      value,
+    }: {
+      value: {
+        email: string;
+        password: string;
+        name: string;
+        confirmpassword: string;
+        dateofbirth: number;
+        monthofbirth: number;
+        yearofbirth: number;
+      };
+    }) {
+      try {
+        signUp
+          .email(
+            {
+              email: value.email,
+              password: value.password,
+              name: value.name,
+            },
+            {
+              onRequest: () => {
+                setLoading(true);
+              },
+              onSuccess: () => {
+                setLoading(false);
+                redirect("/channels");
+              },
+              onError: (ctx) => {
+                setLoading(false);
+                setRegisterError(ctx.error.message);
+              },
+            },
+          )
+          .then(({ data, error }) => {
+            console.log(data, error);
+          });
+      } catch (error) {
+        console.log(error);
       }
     },
   });
   function formSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    event.stopPropagation();
     registerForm.handleSubmit();
   }
   return (
@@ -72,36 +114,12 @@ export default function Register() {
 
         <h2 className="text-3xl font-bold">Create Account</h2>
 
-        <registerForm.AppField name="username">
-          {(field) => (
-            <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="username">Username</Label>
-              <field.Input
-                placeholder="Enter username"
-                id="username"
-                name="username"
-                onBlur={field.handleBlur}
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                className="border-primary/40"
-              />
-              {!field.state.meta.isValid ? (
-                <em role="alert" className="text-red-400">
-                  {field.state.meta.errors[0]?.message}
-                </em>
-              ) : (
-                ""
-              )}
-            </div>
-          )}
-        </registerForm.AppField>
-
         <registerForm.AppField name="name">
           {(field) => (
             <div className="grid w-full max-w-sm items-center gap-3">
-              <Label htmlFor="displayname">Display Name</Label>
+              <Label htmlFor="name">Name</Label>
               <field.Input
-                placeholder="Enter displayname"
+                placeholder="Enter name"
                 id="name"
                 name="name"
                 onBlur={field.handleBlur}
@@ -169,6 +187,40 @@ export default function Register() {
           )}
         </registerForm.AppField>
 
+        <registerForm.AppField name="confirmpassword">
+          {(field) => (
+            <div className="grid w-full max-w-sm items-center gap-3">
+              <Label htmlFor="confirmpassword">Confirm Password</Label>
+              <field.Input
+                placeholder="Enter username"
+                id="confirmpassword"
+                name="confirmpassword"
+                onBlur={field.handleBlur}
+                value={field.state.value}
+                onChange={(e) => {
+                  field.handleChange(e.target.value);
+                  if (
+                    e.target.value.length > 0 &&
+                    registerForm.getFieldValue("password") !== e.target.value
+                  ) {
+                    field.state.meta.errors.push({
+                      message: "Passwords do not match",
+                    });
+                  }
+                }}
+                className="border-primary/40"
+              />
+              {!field.state.meta.isValid ? (
+                <em role="alert" className="text-red-400">
+                  {field.state.meta.errors[0]?.message}
+                </em>
+              ) : (
+                ""
+              )}
+            </div>
+          )}
+        </registerForm.AppField>
+
         {/* TODO: Implement better date picker */}
         <registerForm.AppField name="dateofbirth">
           {(field) => (
@@ -202,27 +254,30 @@ export default function Register() {
           )}
         </registerForm.AppField>
 
-        {formError !== "" ? (
-          <div>
-            <em role="alert" className="text-red-400">
-              {formError}
-            </em>
-          </div>
-        ) : (
-          ""
-        )}
-
         <registerForm.AppForm>
           <registerForm.Button
             type="submit"
             variant={"secondary"}
-            className="bg-accent grid w-full max-w-sm items-center gap-3 hover:bg-accent/50"
+            className="bg-accent flex w-full max-w-sm items-center hover:bg-accent/50"
+            disabled={loading}
           >
             Continue
+            {loading ? <Loader2Icon className="animate-spin" /> : ""}
           </registerForm.Button>
         </registerForm.AppForm>
 
-        <Button className="grid w-full max-w-sm items-center gap-3">
+        {registerError ? (
+          <em role="alert" className="text-red-400">
+            {registerError}
+          </em>
+        ) : (
+          ""
+        )}
+
+        <Button
+          className="grid w-full max-w-sm items-center gap-3"
+          formNoValidate
+        >
           <Link href="/login">Already have an account?</Link>
         </Button>
       </form>

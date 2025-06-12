@@ -6,7 +6,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+} from "~/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarMenuAction,
@@ -15,7 +15,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar";
+} from "~/components/ui/sidebar";
 import Link from "next/link";
 
 export function Categories({

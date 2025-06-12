@@ -1,8 +1,7 @@
-import { Icons } from "@/components/icons";
-import { Input } from "@/components/ui/input";
+import { Icons } from "~/components/ui/icons";
+import { Input } from "~/components/ui/input";
 
-export default  function Hub() {
-  
+export default function Channel() {
   const messages = [
     {
       messageId: "1",
@@ -36,7 +35,7 @@ export default  function Hub() {
             </div>
           </div>
         ))}
-      <Input className="w-full"/>
+        <Input className="w-full" />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-import { Icons } from "@/components/icons";
-import { Button } from "@/components/ui/button";
+import { Icons } from "~/components/ui/icons";
+import { Button } from "~/components/ui/button";
 import { Pacifico } from "next/font/google";
 import Link from "next/link";
 

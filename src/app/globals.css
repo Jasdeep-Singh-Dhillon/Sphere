@@ -194,8 +194,7 @@
 }
 
 .gradient {
-  background:
-    radial-gradient(at 34% 32%, #ffa397 5px, transparent 40%),
+  background: radial-gradient(at 34% 32%, #ffa397 5px, transparent 40%),
     radial-gradient(at 69% 63%, #72b1f9 5px, transparent 40%),
     radial-gradient(at 28% 61%, #ffa3ee 5px, transparent 40%),
     radial-gradient(at 81% 36%, #8c42f4 5px, transparent 40%);

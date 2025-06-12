@@ -1,6 +1,6 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
+import { Select } from "~/components/ui/select";
 
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
 

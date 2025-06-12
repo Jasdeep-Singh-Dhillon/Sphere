@@ -1,30 +1,18 @@
 "use client";
-import { Icons } from "@/components/icons";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import useAppForm from "@/lib/appForm";
-import { credentialSignIn, githubSignIn, googleSignIn } from "@/lib/signIn";
+import { Icons } from "~/components/ui/icons";
+import { Button } from "~/components/ui/button";
+import { Label } from "~/components/ui/label";
+import useAppForm from "~/lib/app-form";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import z from "zod/v4";
-
-function ErrorMessage({ message }: { message: string | undefined }) {
-  if (!message) {
-    return "";
-  }
-  if (message === "Hub") redirect("/hub");
-  return (
-    <em role="alert" className="text-red-400">
-      {message}
-    </em>
-  );
-}
+import { signIn } from "~/lib/auth-client";
+import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
 
 export default function Login() {
-  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
-
+  const [loading, setLoading] = useState(false);
   const loginForm = useAppForm({
     defaultValues: {
       email: "",
@@ -44,10 +32,34 @@ export default function Login() {
         }),
       }),
     },
-    onSubmit: async function ({ value }) {
-      const result = await credentialSignIn(value.email, value.password);
-      console.log(result);
-      setErrorMessage(result);
+    onSubmit: async function ({
+      value,
+    }: {
+      value: {
+        email: string;
+        password: string;
+      };
+    }) {
+      const { data, error } = await signIn.email(
+        {
+          email: value.email,
+          password: value.password,
+          callbackURL: "/channels",
+        },
+        {
+          onRequest: () => {
+            setLoading(true);
+          },
+          onSuccess: () => {
+            setLoading(false);
+          },
+          onError: (ctx) => {
+            setLoading(false);
+            toast(ctx.error.message);
+          },
+        },
+      );
+      console.log(data, error);
     },
   });
 
@@ -72,7 +84,13 @@ export default function Login() {
             type="button"
             className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
             onClick={async () => {
-              await googleSignIn();
+              console.log("Clicked google");
+              signIn.social({
+                provider: "google",
+                callbackURL: "/channels",
+                errorCallbackURL: "/login?error",
+                newUserCallbackURL: "/welcome",
+              });
             }}
           >
             <Icons.google className="w-5 h-5" />
@@ -81,6 +99,9 @@ export default function Login() {
           <Button
             type="button"
             className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
+            onClick={async () => {
+              console.log("Apple Sign In Clicked");
+            }}
           >
             <Icons.apple className="w-5 h-5" />
             Continue with Apple
@@ -89,8 +110,14 @@ export default function Login() {
           <Button
             type="submit"
             className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
-            onClick={async () => {
-              await githubSignIn();
+            onClick={() => {
+              console.log("GitHub Sign In Clicked");
+              signIn.social({
+                provider: "github",
+                callbackURL: "/channels",
+                errorCallbackURL: "/login?error",
+                newUserCallbackURL: "/welcome",
+              });
             }}
           >
             <Icons.gitHub className="w-5 h-5" />
@@ -118,7 +145,9 @@ export default function Login() {
                   name="email"
                   onBlur={field.handleBlur}
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    field.handleChange(e.target.value)
+                  }
                   type="text"
                   className="border-primary/40"
                 />
@@ -142,7 +171,9 @@ export default function Login() {
                   name="password"
                   onBlur={field.handleBlur}
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    field.handleChange(e.target.value)
+                  }
                   type="password"
                   className="border-primary/40"
                 />
@@ -157,14 +188,14 @@ export default function Login() {
             )}
           </loginForm.AppField>
 
-          <div className="mb-4">{<ErrorMessage message={errorMessage} />}</div>
-
           <Button
             variant={"accent"}
             type="submit"
             className="w-full text-white py-3 rounded-lg font-bold"
+            disabled={loading}
           >
             Login
+            {loading ? <Loader2Icon className="animate-spin" /> : ""}
           </Button>
           <div className="flex w-full justify-between items-center text-sm mt-4">
             <Link href="#" className="hover:underline">

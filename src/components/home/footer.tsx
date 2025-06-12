@@ -1,4 +1,4 @@
-import { Icons } from "./icons";
+import { Icons } from "../ui/icons";
 import { Pacifico } from "next/font/google";
 
 const pacifico = Pacifico({
