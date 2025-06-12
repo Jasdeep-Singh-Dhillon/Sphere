@@ -5,10 +5,14 @@ import { Label } from "~/components/ui/label";
 import useAppForm from "~/lib/app-form";
 import Link from "next/link";
 
-import { ChangeEvent, FormEvent } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import z from "zod/v4";
+import { signIn } from "~/lib/auth-client";
+import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
 
 export default function Login() {
+  const [loading, setLoading] = useState(false);
   const loginForm = useAppForm({
     defaultValues: {
       email: "",
@@ -28,8 +32,34 @@ export default function Login() {
         }),
       }),
     },
-    onSubmit: async function ({ value }) {
-      console.log(value);
+    onSubmit: async function ({
+      value,
+    }: {
+      value: {
+        email: string;
+        password: string;
+      };
+    }) {
+      const { data, error } = await signIn.email(
+        {
+          email: value.email,
+          password: value.password,
+          callbackURL: "/channels",
+        },
+        {
+          onRequest: () => {
+            setLoading(true);
+          },
+          onSuccess: () => {
+            setLoading(false);
+          },
+          onError: (ctx) => {
+            setLoading(false);
+            toast(ctx.error.message);
+          },
+        },
+      );
+      console.log(data, error);
     },
   });
 
@@ -53,8 +83,14 @@ export default function Login() {
           <Button
             type="button"
             className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
-            onClick={() => {
-              console.log("Google Sign In Clicked");
+            onClick={async () => {
+              console.log("Clicked google");
+              signIn.social({
+                provider: "google",
+                callbackURL: "/channels",
+                errorCallbackURL: "/login?error",
+                newUserCallbackURL: "/welcome",
+              });
             }}
           >
             <Icons.google className="w-5 h-5" />
@@ -63,7 +99,7 @@ export default function Login() {
           <Button
             type="button"
             className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
-            onClick={() => {
+            onClick={async () => {
               console.log("Apple Sign In Clicked");
             }}
           >
@@ -76,6 +112,12 @@ export default function Login() {
             className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
             onClick={() => {
               console.log("GitHub Sign In Clicked");
+              signIn.social({
+                provider: "github",
+                callbackURL: "/channels",
+                errorCallbackURL: "/login?error",
+                newUserCallbackURL: "/welcome",
+              });
             }}
           >
             <Icons.gitHub className="w-5 h-5" />
@@ -150,8 +192,10 @@ export default function Login() {
             variant={"accent"}
             type="submit"
             className="w-full text-white py-3 rounded-lg font-bold"
+            disabled={loading}
           >
             Login
+            {loading ? <Loader2Icon className="animate-spin" /> : ""}
           </Button>
           <div className="flex w-full justify-between items-center text-sm mt-4">
             <Link href="#" className="hover:underline">

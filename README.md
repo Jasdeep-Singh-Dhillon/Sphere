@@ -1,6 +1,6 @@
 # Sphere
 - [x] Logo
-- [o] Design
+- [ ] Design
 - [x] Deploy
 - [x] Dark Mode
 - [ ] Sign Up

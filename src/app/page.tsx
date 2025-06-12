@@ -37,6 +37,7 @@ export default function Home() {
             src="/images/homepage_placeholder.png"
             width={500}
             height={200}
+            unoptimized
             alt="Homepage of the chats tab"
             className="md:hidden shadow-2xl/30 shadow-primary rounded-lg"
           />
@@ -44,8 +45,9 @@ export default function Home() {
             src="/images/homepage_placeholder.png"
             width={900}
             height={400}
+            unoptimized
             alt="Homepage of the chats tab"
-            className="hidden md:block m-4 shadow-2xl/30 shadow-primary rounded-lg"
+            className="hidden md:block m-4 shadow-2xl/30 shadow-primary rounded-lg w-full h-auto"
           />
         </section>
         <section className="p-8 text-center flex gap-2 flex-col">
