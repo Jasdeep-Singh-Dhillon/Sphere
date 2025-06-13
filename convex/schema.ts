@@ -12,7 +12,7 @@ export const serverSchema = {
   name: v.string(),
   serverIcon: v.string(),
   description: v.string(),
-  ownerid: v.id("users"),
+  ownerid: v.id("usersInfo"),
 };
 
 export const channelSchema = {
@@ -29,7 +29,7 @@ export const categorySchema = {
 };
 
 export const messageSchema = {
-  userid: v.id("users"),
+  userid: v.id("usersInfo"),
   channelid: v.id("channels"),
   content: v.string(),
   replyMessageid: v.optional(v.id("messages")),
@@ -49,7 +49,7 @@ export const permissionSchema = {
 };
 
 export const serverProfileSchema = {
-  userid: v.id("users"),
+  userid: v.id("usersInfo"),
   serverid: v.id("servers"),
   displayName: v.string(),
   userIcon: v.string(),
@@ -57,7 +57,7 @@ export const serverProfileSchema = {
 };
 
 export const userRoleSchema = {
-  userid: v.id("users"),
+  userid: v.id("usersInfo"),
   serverid: v.id("servers"),
   roleId: v.id("roles"),
 };
