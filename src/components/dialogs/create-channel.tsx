@@ -14,7 +14,7 @@ import { Label } from '~/components/ui/label';
 import { Input } from '~/components/ui/input';
 import { Button } from '~/components/ui/button';
 
-export function CreateChannelDialog() {
+export function CreateChannelDialog({ children }: { children: React.ReactNode }) {
   const [channelType, setChannelType] = React.useState<'text' | 'voice'>('text');
   const [channelName, setChannelName] = React.useState('');
   const [isPrivate, setIsPrivate] = React.useState(false);
@@ -26,9 +26,7 @@ export function CreateChannelDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-accent text-white font-semibold px-6 py-2 rounded-xl shadow hover:bg-accent/90 transition">
-          + Create Channel
-        </Button>
+        {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-md rounded-2xl bg-background/80 shadow-2xl border border-accent/10">
         <DialogHeader>
@@ -52,9 +50,8 @@ export function CreateChannelDialog() {
               <Button
                 type="button"
                 variant="ghost"
-                className={`w-1/2 z-10 transition-colors duration-300 ${
-                  channelType === 'text' ? 'text-white font-bold' : 'text-accent'
-                }`}
+                className={`w-1/2 z-10 transition-colors duration-300 ${channelType === 'text' ? 'text-white font-bold' : 'text-accent'
+                  }`}
                 onClick={() => setChannelType('text')}
                 style={{ background: 'none' }}
               >
@@ -63,9 +60,8 @@ export function CreateChannelDialog() {
               <Button
                 type="button"
                 variant="ghost"
-                className={`w-1/2 z-10 transition-colors duration-300 ${
-                  channelType === 'voice' ? 'text-white font-bold' : 'text-accent'
-                }`}
+                className={`w-1/2 z-10 transition-colors duration-300 ${channelType === 'voice' ? 'text-white font-bold' : 'text-accent'
+                  }`}
                 onClick={() => setChannelType('voice')}
                 style={{ background: 'none' }}
               >
@@ -102,6 +98,7 @@ export function CreateChannelDialog() {
           <Button
             onClick={handleCreate}
             className="bg-accent text-white font-semibold rounded-lg px-6 shadow hover:bg-accent/90 transition"
+            disabled={!channelName.trim()}
           >
             Create Channel
           </Button>

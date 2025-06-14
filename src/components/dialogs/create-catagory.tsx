@@ -14,7 +14,7 @@ import { Input } from '~/components/ui/input';
 import { Button } from '~/components/ui/button';
 import { Switch } from '~/components/ui/switch'; // If you have a Switch component
 
-export function CreateCategoryDialog() {
+export function CreateCategoryDialog({ children }: { children: React.ReactNode }) {
   const [categoryName, setCategoryName] = React.useState('');
   const [isPrivate, setIsPrivate] = React.useState(false);
 
@@ -26,9 +26,7 @@ export function CreateCategoryDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-accent text-white font-semibold px-6 py-2 rounded-xl shadow transition">
-          + Create Category
-        </Button>
+        {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-md rounded-2xl bg-background/80 shadow-2xl border border-accent/10">
         <DialogHeader>
@@ -53,7 +51,7 @@ export function CreateCategoryDialog() {
           <div className="flex items-start gap-3 mt-2">
             <div className="pt-1">
               <span className="inline-block text-xl text-accent">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path fill="currentColor" d="M17 11V7a5 5 0 0 0-10 0v4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2ZM9 7a3 3 0 1 1 6 0v4H9V7Zm8 6v6a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1Z"/></svg>
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path fill="currentColor" d="M17 11V7a5 5 0 0 0-10 0v4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2ZM9 7a3 3 0 1 1 6 0v4H9V7Zm8 6v6a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1Z" /></svg>
               </span>
             </div>
             <div className="flex-1">
