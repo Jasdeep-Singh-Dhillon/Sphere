@@ -1,6 +1,15 @@
-export { auth as middleware } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
+import { getSessionCookie } from "better-auth/cookies";
 
-// https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-// export const config = {
-//   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
-// };
+export async function middleware(request: NextRequest) {
+  const sessionCookie = getSessionCookie(request);
+
+  if (!sessionCookie) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/channels/*"]
+}

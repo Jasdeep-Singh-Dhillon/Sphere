@@ -13,17 +13,16 @@ import {
   SquareTerminal,
 } from "lucide-react";
 
-import { Categories } from "@/components/categories";
-import { SidebarUser } from "@/components/sidebar-user";
-import { ServerOptions } from "@/components/server-options";
+import { Categories } from "~/components/server/categories";
+import { SidebarUser } from "~/components/server/sidebar-user";
+import { ServerOptions } from "~/components/server/server-options";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar";
-import { type Session } from "next-auth";
+} from "~/components/ui/sidebar";
 const serverOptions = [
   {
     name: "Invite People",
@@ -148,7 +147,13 @@ const categories = [
   },
 ];
 
-export function AppSidebar({ session }: { session: Session}) {
+const user = {
+  name: "John Doe",
+  email: "john@test.mail",
+  image: "https://avatars.githubusercontent.com/u/12345678?v=4",
+};
+
+export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
@@ -158,7 +163,7 @@ export function AppSidebar({ session }: { session: Session}) {
         <Categories categories={categories} />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarUser user={session.user} />
+        <SidebarUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
