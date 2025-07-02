@@ -16,7 +16,8 @@ export const setUsername = mutation({
       return null;
     }
 
-    return ctx.db.patch(userInfo?._id, { username: args.username });
+    await ctx.db.patch(userInfo?._id, { username: args.username });
+    return true
   },
 });
 
@@ -47,13 +48,18 @@ export const createServer = mutation({
     if (!userInfo) {
       return null;
     }
-
-    return ctx.db.insert("servers", {
+    const server = await ctx.db.insert("servers", {
       name: args.serverName,
       ownerid: userInfo._id,
       serverIcon: args.serverIcon,
       description: args.description,
     });
+    const joined = userInfo.joined;
+    joined.push(server);
+    console.log(joined);
+    await ctx.db.patch(userInfo._id, { joined });
+    
+    return server;
   },
 });
 
@@ -98,13 +104,27 @@ export const sendMessage = mutation({
       .query("usersInfo")
       .withIndex("by_userId", (q) => q.eq("userid", args.userid))
       .unique();
-    if (!user) {
-      return null;
-    }
+    if (!user) return null;
     return ctx.db.insert("messages", {
       channelid: args.channelid,
       content: args.content,
       userid: user._id,
     });
+  },
+});
+
+export const joinServer = mutation({
+  args: {
+    userid: v.string(),
+    serverid: v.id("servers"),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("usersInfo")
+      .withIndex("by_userId", (q) => q.eq("userid", args.userid))
+      .unique();
+    if (!user) return null;
+    user.joined.push(args.serverid);
+    return ctx.db.patch(user._id, { joined: user.joined });
   },
 });

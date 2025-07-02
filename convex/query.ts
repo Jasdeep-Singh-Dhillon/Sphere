@@ -137,9 +137,22 @@ export const getUsername = query({
   },
 });
 
+export const isUsernameAvailable = query({
+  args: {
+    username: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("usersInfo")
+      .withIndex("by_username", (q) => q.eq("username", args.username))
+      .unique();
+    return user ? true : false;
+  },
+});
+
 export const getServerInfo = query({
   args: {
-    serverid: v.id("servers")
+    serverid: v.id("servers"),
   },
   handler: async (ctx, args) => {
     const server = ctx.db.get(args.serverid);

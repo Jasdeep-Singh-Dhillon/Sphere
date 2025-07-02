@@ -6,7 +6,7 @@ export const userSchema = {
   about: v.optional(v.string()),
   joined: v.array(v.id("servers")),
   userid: v.string(),
-  image: v.optional(v.string())
+  image: v.optional(v.string()),
 };
 
 export const serverSchema = {
@@ -64,7 +64,9 @@ export const userRoleSchema = {
 };
 
 export default defineSchema({
-  usersInfo: defineTable(userSchema).index("by_userId", ["userid"]),
+  usersInfo: defineTable(userSchema)
+    .index("by_userId", ["userid"])
+    .index("by_username", ["username"]),
   servers: defineTable(serverSchema),
   channels: defineTable(channelSchema)
     .index("by_serverId", ["serverid"])
