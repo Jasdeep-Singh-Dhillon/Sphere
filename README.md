@@ -1,9 +1,18 @@
 # Sphere
-- [x] Logo
-- [ ] Design
-- [x] Deploy
-- [x] Dark Mode
-- [ ] Sign Up
-- [ ] Login
-- [ ] Authentication
-- [ ] Database
+- [x] Server Icon
+- [x] Send Message
+- [ ] Import dialogs
+- [ ] Create Server
+- [ ] Create Channels
+- [ ] Set Username
+- [ ] UI for no categories in server sidebar
+- [ ] File Uploads
+- [ ] Embed Photos
+- [ ] Embed Videos
+- [ ] Members in servers schema
+- [ ] Validate if user has joined server
+- [ ] More permission validation
+- [ ] Permissions
+- [ ] React Compiler / Memo
+- [ ] 
+- [ ] 
