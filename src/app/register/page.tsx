@@ -100,7 +100,7 @@ export default function Register() {
     event.preventDefault();
     event.stopPropagation();
     registerForm.handleSubmit();
-  }
+  };
   return (
     <div className="gradient w-full h-dvh flex justify-center items-center min-h-screen ">
       <form
@@ -277,6 +277,7 @@ export default function Register() {
         <Button
           className="grid w-full max-w-sm items-center gap-3"
           formNoValidate
+          type="button"
         >
           <Link href="/login">Already have an account?</Link>
         </Button>
