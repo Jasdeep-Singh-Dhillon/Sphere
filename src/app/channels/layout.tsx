@@ -1,12 +1,10 @@
 "use client";
-import { redirect } from "next/navigation";
 import { ReactNode } from "react";
-import { useSession } from "~/lib/auth-client";
+import { ConvexReactClient, ConvexProvider } from "convex/react";
+import { env } from "~/env";
+
+const convex = new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL);
 
 export default function ChannelLayout({ children }: { children: ReactNode }) {
-  const { data, isPending } = useSession();
-  if (!isPending && !data) {
-    redirect("/login");
-  }
-  return <>{children}</>;
+  return <ConvexProvider client={convex}>{children}</ConvexProvider>;
 }
