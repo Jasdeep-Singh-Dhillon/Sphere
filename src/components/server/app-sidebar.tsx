@@ -1,18 +1,5 @@
 "use client";
 
-import * as React from "react";
-import {
-  BookOpen,
-  Bot,
-  CirclePlus,
-  DoorOpen,
-  FolderPlus,
-  MailPlus,
-  Settings,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
-
 import { Categories } from "~/components/server/categories";
 import { SidebarUser } from "~/components/server/sidebar-user";
 import { ServerOptions } from "~/components/server/server-options";
@@ -23,145 +10,30 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "~/components/ui/sidebar";
-const serverOptions = [
-  {
-    name: "Invite People",
-    logo: MailPlus,
-  },
-  {
-    name: "Server Settings",
-    logo: Settings,
-  },
-  {
-    name: "Create Channel",
-    logo: CirclePlus,
-  },
-  {
-    name: "Create Category",
-    logo: FolderPlus,
-  },
-  {
-    name: "Leave Server",
-    logo: DoorOpen,
-  },
-];
-const categories = [
-  {
-    id: "1",
-    title: "Playground",
-    icon: SquareTerminal,
-    isActive: true,
-    channels: [
-      {
-        id: "1",
-        title: "History",
-        url: "#",
-      },
-      {
-        id: "2",
-        title: "Starred",
-        url: "#",
-      },
-      {
-        id: "3",
-        title: "Settings",
-        url: "#",
-      },
-    ],
-  },
-  {
-    id: "2",
-    title: "Models",
-    icon: Bot,
-    channels: [
-      {
-        id: "4",
-        title: "Genesis",
-        url: "#",
-      },
-      {
-        id: "5",
-        title: "Explorer",
-        url: "#",
-      },
-      {
-        id: "6",
-        title: "Quantum",
-        url: "#",
-      },
-    ],
-  },
-  {
-    id: "3",
-    title: "Documentation",
-    icon: BookOpen,
-    channels: [
-      {
-        id: "7",
-        title: "Introduction",
-        url: "#",
-      },
-      {
-        id: "8",
-        title: "Get Started",
-        url: "#",
-      },
-      {
-        id: "9",
-        title: "Tutorials",
-        url: "#",
-      },
-      {
-        id: "10",
-        title: "Changelog",
-        url: "#",
-      },
-    ],
-  },
-  {
-    id: "4",
-    title: "Settings",
-    icon: Settings2,
-    channels: [
-      {
-        id: "11",
-        title: "General",
-        url: "#",
-      },
-      {
-        id: "12",
-        title: "Team",
-        url: "#",
-      },
-      {
-        id: "13",
-        title: "Billing",
-        url: "#",
-      },
-      {
-        id: "14",
-        title: "Limits",
-        url: "#",
-      },
-    ],
-  },
-];
 
-const user = {
-  name: "John Doe",
-  email: "john@test.mail",
-  image: "https://avatars.githubusercontent.com/u/12345678?v=4",
-};
-
-export function AppSidebar() {
+export function AppSidebar({
+  user,
+}: {
+  user:
+    | {
+        name: string;
+        email: string;
+        image?: string;
+      }
+    | undefined;
+}) {
   return (
-    <Sidebar>
+    <Sidebar variant="floating">
       <SidebarHeader>
-        <ServerOptions serverOptions={serverOptions} />
+        <ServerOptions />
       </SidebarHeader>
+
+      {/* <Suspense fallback="Loading..."> */}
       <SidebarContent>
-        <Categories categories={categories} />
+        <Categories />
       </SidebarContent>
+      {/* </Suspense> */}
+
       <SidebarFooter>
         <SidebarUser user={user} />
       </SidebarFooter>

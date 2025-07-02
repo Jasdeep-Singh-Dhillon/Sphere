@@ -23,10 +23,17 @@ import {
   useSidebar,
 } from "~/components/ui/sidebar";
 import { signOut } from "~/lib/auth-client";
+import { Skeleton } from "../ui/skeleton";
 
-export function SidebarUser({ user }: { user: { name: string; email: string; image?: string } }) {
+export function SidebarUser({
+  user,
+}: {
+  user: { name: string; email: string; image?: string  } | undefined;
+}) {
   const { isMobile } = useSidebar();
-
+  if (!user) {
+    return <Skeleton className="w-full h-16" />;
+  }
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -36,7 +43,7 @@ export function SidebarUser({ user }: { user: { name: string; email: string; ima
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="h-8 w-8 rounded-2xl">
                 <AvatarImage src={user?.image} />
                 <AvatarFallback className="rounded-lg"></AvatarFallback>
               </Avatar>
@@ -86,13 +93,13 @@ export function SidebarUser({ user }: { user: { name: string; email: string; ima
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={async() => {
+              onClick={async () => {
                 await signOut({
                   fetchOptions: {
                     onSuccess: () => {
                       redirect("/");
-                    }
-                  }
+                    },
+                  },
                 });
               }}
             >

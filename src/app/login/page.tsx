@@ -84,12 +84,11 @@ export default function Login() {
             type="button"
             className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
             onClick={async () => {
-              console.log("Clicked google");
               signIn.social({
                 provider: "google",
                 callbackURL: "/channels",
                 errorCallbackURL: "/login?error",
-                newUserCallbackURL: "/welcome",
+                newUserCallbackURL: "/onboarding",
               });
             }}
           >
@@ -116,7 +115,7 @@ export default function Login() {
                 provider: "github",
                 callbackURL: "/channels",
                 errorCallbackURL: "/login?error",
-                newUserCallbackURL: "/welcome",
+                newUserCallbackURL: "/onboarding",
               });
             }}
           >
