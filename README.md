@@ -1,18 +1,18 @@
 # Sphere
 - [x] Server Icon
 - [x] Send Message
-- [ ] Import dialogs
-- [ ] Create Server
-- [ ] Create Channels
-- [ ] Set Username
-- [ ] UI for no categories in server sidebar
+- [x] Import dialogs
+- [x] Create Server
+- [x] Create Channels
+- [x] Set Username
 - [ ] File Uploads
 - [ ] Embed Photos
 - [ ] Embed Videos
 - [ ] Members in servers schema
 - [ ] Validate if user has joined server
-- [ ] More permission validation
 - [ ] Permissions
+- [ ] More permission validation
+- [ ] UI for no categories in server sidebar
 - [ ] React Compiler / Memo
 - [ ] 
 - [ ] 

@@ -5,6 +5,8 @@
       "name": "sphere",
       "dependencies": {
         "@libsql/kysely-libsql": "^0.4.1",
+        "@radix-ui/react-alert-dialog": "^1.1.14",
+        "@radix-ui/react-slot": "^1.2.3",
         "@t3-oss/env-nextjs": "^0.13.8",
         "@tanstack/react-form": "^1.12.2",
         "better-auth": "^1.2.9",

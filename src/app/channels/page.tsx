@@ -7,12 +7,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "~/lib/auth-client";
 import { redirect } from "next/navigation";
+import { Button } from "~/components/ui/button";
+import { Plus } from "lucide-react";
+import { CreateServerDialog } from "~/components/dialogs/create-server";
 
 function ServerCards({ userid }: { userid: string }) {
   const servers = useQuery(api.query.getJoinedServers, { userid });
+  const username = useQuery(api.query.getUsername, { userid });
+  if (username === "") {
+    redirect("/onboarding");
+  }
   if (servers?.length) {
     return (
-      <div className="grid grid-flow-col gap-4 auto-cols-max m-4">
+      <div className="flex flex-wrap justify-center gap-2 m-4">
         {servers?.map((server) => (
           <Link
             href={`/channels/${server?._id}`}
@@ -24,7 +31,10 @@ function ServerCards({ userid }: { userid: string }) {
                 <Image
                   width={400}
                   height={200}
-                  src={"/images/server_image_placeholder.svg"}
+                  src={
+                    // server?.serverIcon ||
+                    "/images/server_image_placeholder.svg"
+                  }
                   alt={`${server?.name}`}
                   className="w-full h-[200] object-cover rounded-tl-lg rounded-tr-lg "
                 />
@@ -55,7 +65,17 @@ export default function Servers() {
       {isPending ? (
         <>Loading...</>
       ) : data?.user ? (
-        <ServerCards userid={data.user.id} />
+        <>
+          <ServerCards userid={data.user.id} />
+          <CreateServerDialog>
+            <Button
+              variant={"accent"}
+              className="absolute bottom-0 right-0 m-2"
+            >
+              <Plus /> Create Server
+            </Button>
+          </CreateServerDialog>
+        </>
       ) : (
         ""
       )}

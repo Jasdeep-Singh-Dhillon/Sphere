@@ -9,9 +9,12 @@ import { FormEvent, KeyboardEvent } from "react";
 import useAppForm from "~/lib/app-form";
 import { z } from "zod/v4";
 import { CloudUpload, SendHorizontal } from "lucide-react";
-import { Button } from "~/components/ui/button";
+
 import { getSession } from "~/lib/auth-client";
 import { toast } from "sonner";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
+import { Label } from "~/components/ui/label";
 
 export default function Channel() {
   const params = useParams();
@@ -63,6 +66,8 @@ export default function Channel() {
     }
   }
 
+  function handleUpload() {}
+
   return (
     <div className="m-4">
       <div className="absolute bottom-0 w-11/12 m-4">
@@ -85,7 +90,7 @@ export default function Channel() {
                       <div className="font-semibold">{message.username}</div>
                       <div>{new Date(message.time).toLocaleTimeString()}</div>
                     </div>
-                    <div>{message.content}</div>
+                    <div className="whitespace-pre-wrap">{message.content}</div>
                   </div>
                 </div>
               ))
@@ -116,7 +121,17 @@ export default function Channel() {
           </messageForm.AppField>
           <div className="flex flex-col gap-2">
             <Button variant="secondary" type="button" className="aspect-square">
-              <CloudUpload />
+              <Input
+                type="file"
+                id="fileUpload"
+                name="fileUpload"
+                className="aspect-square hidden"
+                onClick={handleUpload}
+                placeholder=""
+              />
+              <Label htmlFor="fileUpload">
+                <CloudUpload className="relative" />
+              </Label>
             </Button>
             <messageForm.Button
               type="submit"
