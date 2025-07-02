@@ -13,7 +13,9 @@ export const env = createEnv({
     TURSO_DB_URL: z.string(),
     TURSO_DB_TOKEN: z.string(),
   },
-  client: {},
+  client: {
+    NEXT_PUBLIC_CONVEX_URL: z.string(),
+  },
   runtimeEnv: {
     AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
     AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
@@ -24,6 +26,8 @@ export const env = createEnv({
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     TURSO_DB_URL: process.env.TURSO_DB_URL,
     TURSO_DB_TOKEN: process.env.TURSO_DB_TOKEN,
+
+    NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
   },
   emptyStringAsUndefined: true,
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
