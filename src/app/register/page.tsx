@@ -6,12 +6,6 @@ import useAppForm from "~/lib/app-form";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { Icons } from "~/components/ui/icons";
-import {
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 import { signUp } from "~/lib/auth-client";
 import { Loader2Icon } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -21,13 +15,10 @@ export default function Register() {
   const [registerError, setRegisterError] = useState<string | undefined>();
   const registerForm = useAppForm({
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmpassword: "",
-      name: "",
-      dateofbirth: 12,
-      monthofbirth: 11,
-      yearofbirth: 2020,
     },
     validators: {
       onChange: z.object({
@@ -35,9 +26,6 @@ export default function Register() {
         email: z.string({ error: "Email is required" }),
         password: z.string({ error: "Password is required" }),
         confirmpassword: z.string(),
-        dateofbirth: z.number(),
-        monthofbirth: z.number(),
-        yearofbirth: z.number(),
       }),
       onSubmit: z.object({
         email: z.email({ error: "Enter a valid email address" }),
@@ -48,9 +36,6 @@ export default function Register() {
           .string()
           .min(3, { error: "Name must be at least 3 characters" }),
         confirmpassword: z.string(),
-        dateofbirth: z.number().min(1).max(31),
-        monthofbirth: z.number().min(0).max(11),
-        yearofbirth: z.number().min(1925).max(new Date().getFullYear()),
       }),
     },
     onSubmit: async function ({
@@ -61,9 +46,6 @@ export default function Register() {
         password: string;
         name: string;
         confirmpassword: string;
-        dateofbirth: number;
-        monthofbirth: number;
-        yearofbirth: number;
       };
     }) {
       try {
@@ -100,7 +82,7 @@ export default function Register() {
     event.preventDefault();
     event.stopPropagation();
     registerForm.handleSubmit();
-  };
+  }
   return (
     <div className="gradient w-full h-dvh flex justify-center items-center min-h-screen ">
       <form
@@ -222,7 +204,7 @@ export default function Register() {
         </registerForm.AppField>
 
         {/* TODO: Implement better date picker */}
-        <registerForm.AppField name="dateofbirth">
+        {/* <registerForm.AppField name="dateofbirth">
           {(field) => (
             <div className="grid w-full max-w-sm items-center gap-3">
               <Label htmlFor="dateofbirth">Date of Birth</Label>
@@ -252,7 +234,7 @@ export default function Register() {
               )}
             </div>
           )}
-        </registerForm.AppField>
+        </registerForm.AppField> */}
 
         <registerForm.AppForm>
           <registerForm.Button
