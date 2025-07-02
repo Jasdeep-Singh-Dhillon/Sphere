@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { query } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
 
 export const getJoinedServers = query({
   args: {
@@ -113,9 +114,12 @@ export const getMessages = query({
           username: user?.username,
           image: user?.image,
           id: message._id,
-          content: message.content,
+          content: message.type
+            ? await ctx.storage.getUrl(message.content as Id<"_storage">)
+            : message.content,
           replyMessageId: message.replyMessageid,
           time: message._creationTime,
+          type: message.type,
         };
       }),
     );

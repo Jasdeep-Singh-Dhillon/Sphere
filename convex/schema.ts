@@ -33,6 +33,7 @@ export const messageSchema = {
   userid: v.id("usersInfo"),
   channelid: v.id("channels"),
   content: v.string(),
+  type: v.optional(v.literal("file")),
   replyMessageid: v.optional(v.id("messages")),
 };
 

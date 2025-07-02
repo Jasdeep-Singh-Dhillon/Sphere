@@ -17,7 +17,20 @@ export const setUsername = mutation({
     }
 
     await ctx.db.patch(userInfo?._id, { username: args.username });
-    return true
+    return true;
+  },
+});
+
+export const deleteMessage = mutation({
+  args: {
+    messageid: v.id("messages"),
+    userid: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const message = await ctx.db.get(args.messageid);
+    return message?.userid.toString() === args.userid
+      ? await ctx.db.delete(args.messageid)
+      : null;
   },
 });
 
@@ -58,7 +71,7 @@ export const createServer = mutation({
     joined.push(server);
     console.log(joined);
     await ctx.db.patch(userInfo._id, { joined });
-    
+
     return server;
   },
 });
@@ -126,5 +139,32 @@ export const joinServer = mutation({
     if (!user) return null;
     user.joined.push(args.serverid);
     return ctx.db.patch(user._id, { joined: user.joined });
+  },
+});
+
+export const generateUploadUrl = mutation({
+  handler: async (ctx) => {
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
+export const sendImage = mutation({
+  args: {
+    storageId: v.id("_storage"),
+    userid: v.string(),
+    channelid: v.id("channels"),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("usersInfo")
+      .withIndex("by_userId", (q) => q.eq("userid", args.userid))
+      .unique();
+    if (!user) return null;
+    return ctx.db.insert("messages", {
+      content: args.storageId,
+      userid: user._id,
+      channelid: args.channelid,
+      type: "file",
+    });
   },
 });
