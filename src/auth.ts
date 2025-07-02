@@ -2,6 +2,10 @@ import { betterAuth } from "better-auth";
 import { LibsqlDialect } from "@libsql/kysely-libsql";
 import { env } from "~/env";
 import { toast } from "sonner";
+import { api } from "../convex/_generated/api";
+import { ConvexHttpClient } from "convex/browser";
+
+const convex = new ConvexHttpClient(env.NEXT_PUBLIC_CONVEX_URL);
 
 const dialect = new LibsqlDialect({
   url: env.TURSO_DB_URL,
@@ -13,7 +17,19 @@ export const auth = betterAuth({
     dialect,
     type: "sqlite",
   },
-
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          console.log(user.id);
+          convex.mutation(api.mutation.createAccount, {
+            userid: user.id,
+            image: user?.image ? user.image : undefined,
+          });
+        },
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 6,
@@ -38,7 +54,7 @@ export const auth = betterAuth({
   session: {
     cookieCache: {
       enabled: true,
-      maxAge: 5 * 60,
     },
+    updateAge: 0,
   },
 });
