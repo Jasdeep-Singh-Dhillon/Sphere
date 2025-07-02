@@ -4,8 +4,9 @@ import { v } from "convex/values";
 export const userSchema = {
   username: v.string(),
   about: v.optional(v.string()),
-  joined: v.optional(v.array(v.id("servers"))),
+  joined: v.array(v.id("servers")),
   userid: v.string(),
+  image: v.optional(v.string())
 };
 
 export const serverSchema = {
@@ -65,11 +66,13 @@ export const userRoleSchema = {
 export default defineSchema({
   usersInfo: defineTable(userSchema).index("by_userId", ["userid"]),
   servers: defineTable(serverSchema),
-  channels: defineTable(channelSchema),
-  categories: defineTable(categorySchema),
+  channels: defineTable(channelSchema)
+    .index("by_serverId", ["serverid"])
+    .index("by_categoryId", ["categoryid"]),
+  categories: defineTable(categorySchema).index("by_serverId", ["serverid"]),
   messages: defineTable(messageSchema).index("by_channelId", ["channelid"]),
   roles: defineTable(roleSchema),
   permissions: defineTable(permissionSchema),
   serverProfiles: defineTable(serverProfileSchema),
-  userRoles: defineTable(userRoleSchema),
+  userRoles: defineTable(userRoleSchema).index("by_userId", ["userid"]),
 });
