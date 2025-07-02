@@ -88,7 +88,7 @@ export default function Login() {
                 provider: "google",
                 callbackURL: "/channels",
                 errorCallbackURL: "/login?error",
-                newUserCallbackURL: "/welcome",
+                newUserCallbackURL: "/onboarding",
               });
             }}
           >
@@ -115,7 +115,7 @@ export default function Login() {
                 provider: "github",
                 callbackURL: "/channels",
                 errorCallbackURL: "/login?error",
-                newUserCallbackURL: "/welcome",
+                newUserCallbackURL: "/onboarding",
               });
             }}
           >
