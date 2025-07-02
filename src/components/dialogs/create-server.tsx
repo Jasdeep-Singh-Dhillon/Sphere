@@ -1,5 +1,5 @@
-'use client';
-import * as React from 'react';
+"use client";
+import * as React from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -8,18 +8,29 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
-} from '~/components/ui/dialog';
-import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
-import { Textarea } from '~/components/ui/textarea';
-import { useRef, useState } from 'react';
+} from "~/components/ui/dialog";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { useRef, useState } from "react";
+import Image from "next/image";
+import { Label } from "../ui/label";
+import { getSession } from "~/lib/auth-client";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { toast } from "sonner";
 
-export function CreateServerDialog({ children }: { children: React.ReactNode }) {
-  const [serverName, setServerName] = useState('');
-  const [about, setAbout] = useState('');
-  const [photo, setPhoto] = useState<string | null>(null);
+export function CreateServerDialog({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const [serverName, setServerName] = useState("");
+  const [about, setAbout] = useState("");
+  const [photo, setPhoto] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const createServer = useMutation(api.mutation.createServer);
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -29,16 +40,26 @@ export function CreateServerDialog({ children }: { children: React.ReactNode }) 
     }
   };
 
-  const handleCreate = () => {
-    // Handle create logic here
+  const handleCreate = async () => {
+    const { data } = await getSession();
+    if (data?.user) {
+      const result = await createServer({
+        serverName,
+        serverIcon: photo,
+        userid: data.user.id,
+        description: about,
+      });
+      console.log(result);
+    } else {
+      toast("Error creating server");
+    }
+    setOpen(false);
     console.log({ serverName, about, photo });
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto rounded-2xl bg-background/80 shadow-2xl border border-accent/10">
         <DialogHeader>
           <DialogTitle className="text-2xl font-extrabold text-accent tracking-tight mb-2 text-center">
@@ -52,8 +73,10 @@ export function CreateServerDialog({ children }: { children: React.ReactNode }) 
           {/* Add Photo Section */}
           <div className="flex flex-col items-center gap-2">
             <div className="relative w-20 h-20">
-              <img
-                src={photo || '/logo.svg'}
+              <Image
+                src={photo || 'logo.svg'}
+                width={"20"}
+                height={"20"}
                 alt="Server Preview"
                 className="w-20 h-20 rounded-full object-cover border border-accent/30 bg-muted"
               />
@@ -73,7 +96,7 @@ export function CreateServerDialog({ children }: { children: React.ReactNode }) 
                   />
                 </svg>
               </button>
-              <input
+              <Input
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
@@ -81,13 +104,18 @@ export function CreateServerDialog({ children }: { children: React.ReactNode }) 
                 onChange={handlePhotoChange}
               />
             </div>
-            <div className="text-xs text-muted-foreground">Add a server photo</div>
+            <div className="text-xs text-muted-foreground">
+              Add a server photo
+            </div>
           </div>
           {/* Name Section */}
           <div>
-            <label htmlFor="serverName" className="mb-2 block text-base font-semibold text-accent">
+            <Label
+              htmlFor="serverName"
+              className="mb-2 block text-base font-semibold text-accent"
+            >
               SERVER NAME
-            </label>
+            </Label>
             <Input
               id="serverName"
               placeholder="My Server"
@@ -98,7 +126,10 @@ export function CreateServerDialog({ children }: { children: React.ReactNode }) 
           </div>
           {/* About Section */}
           <div>
-            <label htmlFor="about" className="mb-2 block text-base font-semibold text-accent">
+            <label
+              htmlFor="about"
+              className="mb-2 block text-base font-semibold text-accent"
+            >
               ABOUT
             </label>
             <Textarea

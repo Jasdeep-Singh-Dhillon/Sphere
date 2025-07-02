@@ -16,11 +16,11 @@ import {
   SidebarMenuSubItem,
 } from "~/components/ui/sidebar";
 import Link from "next/link";
-import { toast } from "sonner";
 import { redirect, useParams } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
 import { Id } from "../../../convex/_generated/dataModel";
+import { CreateChannelDialog } from "../dialogs/create-channel";
 
 export function Categories() {
   const params = useParams();
@@ -28,10 +28,10 @@ export function Categories() {
     redirect("/channels");
   }
   const serverid = params.serverid as Id<"servers">;
-  const categories = useQuery(api.query.getCategories, { 
-    id: serverid 
+  const categories = useQuery(api.query.getCategories, {
+    id: serverid,
   });
- 
+
   return (
     <>
       {categories?.map((category) => (
@@ -41,7 +41,7 @@ export function Categories() {
           className="list-none group/collapsible"
         >
           <SidebarGroup>
-            {category.channels?.length ? (
+            {category.channels ? (
               <>
                 <SidebarGroupLabel asChild>
                   <CollapsibleTrigger className="w-full">
@@ -51,12 +51,14 @@ export function Categories() {
                     </span>
                   </CollapsibleTrigger>
                 </SidebarGroupLabel>
-                <SidebarGroupAction
-                  title="Add Channel"
-                  onClick={() => toast("Clicked Add Channel")}
+                <CreateChannelDialog
+                  categoryid={category._id}
+                  serverid={serverid}
                 >
-                  <Plus /> <span className="sr-only">Create Channel</span>
-                </SidebarGroupAction>
+                  <SidebarGroupAction title="Add Channel">
+                    <Plus /> <span className="sr-only">Create Channel</span>
+                  </SidebarGroupAction>
+                </CreateChannelDialog>
 
                 <CollapsibleContent className="mb-2">
                   <SidebarGroupContent>
@@ -79,7 +81,6 @@ export function Categories() {
           </SidebarGroup>
         </Collapsible>
       ))}
-      
     </>
   );
 }
