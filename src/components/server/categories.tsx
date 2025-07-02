@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, MessagesSquare, type LucideIcon } from "lucide-react";
+import { ChevronRight, Hash, Plus } from "lucide-react";
 
 import {
   Collapsible,
@@ -9,63 +9,77 @@ import {
 } from "~/components/ui/collapsible";
 import {
   SidebarGroup,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
+  SidebarGroupAction,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "~/components/ui/sidebar";
 import Link from "next/link";
+import { toast } from "sonner";
+import { redirect, useParams } from "next/navigation";
+import { api } from "../../../convex/_generated/api";
+import { useQuery } from "convex/react";
+import { Id } from "../../../convex/_generated/dataModel";
 
-export function Categories({
-  categories,
-}: {
-  categories: {
-    id: string;
-    title: string;
-    icon: LucideIcon;
-    isActive?: boolean;
-    channels?: {
-      id: string;
-      title: string;
-      url: string;
-    }[];
-  }[];
-}) {
+export function Categories() {
+  const params = useParams();
+  if (!params.serverid) {
+    redirect("/channels");
+  }
+  const serverid = params.serverid as Id<"servers">;
+  const categories = useQuery(api.query.getCategories, { 
+    id: serverid 
+  });
+ 
   return (
-    <SidebarGroup>
-      {categories.map((category) => (
-        <Collapsible key={category.id} defaultOpen={true} >
-          <SidebarMenuItem className="list-none">
+    <>
+      {categories?.map((category) => (
+        <Collapsible
+          defaultOpen={true}
+          key={category._id}
+          className="list-none group/collapsible"
+        >
+          <SidebarGroup>
             {category.channels?.length ? (
               <>
-                <CollapsibleTrigger className="w-full">
-                  <SidebarMenuButton asChild>
-                    <span>{category.title}</span>
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleTrigger asChild>
-                  <SidebarMenuAction className="data-[state=open]:rotate-90">
-                    <ChevronRight />
-                  </SidebarMenuAction>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
+                <SidebarGroupLabel asChild>
+                  <CollapsibleTrigger className="w-full">
+                    <span className="flex items-center gap-2 [&>svg]:size-4 [&>svg]:shrink-0">
+                      {category.name}
+                      <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                    </span>
+                  </CollapsibleTrigger>
+                </SidebarGroupLabel>
+                <SidebarGroupAction
+                  title="Add Channel"
+                  onClick={() => toast("Clicked Add Channel")}
+                >
+                  <Plus /> <span className="sr-only">Create Channel</span>
+                </SidebarGroupAction>
+
+                <CollapsibleContent className="mb-2">
+                  <SidebarGroupContent>
                     {category?.channels.map((channel) => (
                       <SidebarMenuSubItem key={channel.id}>
                         <SidebarMenuSubButton asChild>
-                          <Link href={`/hub/${channel.id}`}><MessagesSquare/>{channel.title}</Link>
+                          <Link
+                            href={`/channels/${params.serverid}/${channel.id}`}
+                          >
+                            <Hash />
+                            {channel.name}
+                          </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}
-                  </SidebarMenuSub>
+                  </SidebarGroupContent>
                 </CollapsibleContent>
               </>
             ) : null}
-          </SidebarMenuItem>
+          </SidebarGroup>
         </Collapsible>
       ))}
-    </SidebarGroup>
+      
+    </>
   );
 }

@@ -16,6 +16,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { useParams } from "next/navigation";
+import { Id } from "../../../convex/_generated/dataModel";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function ServerOptions({
   serverOptions,
@@ -26,7 +31,9 @@ export function ServerOptions({
   }[];
 }) {
   const { isMobile } = useSidebar();
-
+  const params = useParams();
+  const serverid = params.serverid as Id<"servers">;
+  const server = useQuery(api.query.getServerInfo, { serverid });
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -36,9 +43,12 @@ export function ServerOptions({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="bg-accent text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"></div>
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src={server?.serverIcon} />
+                <AvatarFallback className="rounded-lg"></AvatarFallback>
+              </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">Capstone</span>
+                <span className="truncate font-medium">{server?.name}</span>
               </div>
               <EllipsisVertical className="ml-auto" />
             </SidebarMenuButton>
