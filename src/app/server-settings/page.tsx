@@ -1,7 +1,5 @@
 "use client";
 import * as React from "react";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import { ServerProfileSection } from "~/components/dialogs/server-profile";
 import { CreateRoleSection } from "~/components/dialogs/create-role";
 import { MemberListSection } from "~/components/dialogs/member-list";
