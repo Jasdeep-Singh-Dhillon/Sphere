@@ -1,17 +1,23 @@
 "use client";
 import * as React from "react";
+
+
 import { ServerProfileSection } from "~/components/dialogs/server-profile";
 import { CreateRoleSection } from "~/components/dialogs/create-role";
 import { MemberListSection } from "~/components/dialogs/member-list";
+import { EditRolesSection } from "~/components/dialogs/edit-roles-section";
+
 
 const sidebarItems = [
   { key: "profile", label: "Server Profile" },
   { key: "members", label: "Members" },
   { key: "roles", label: "Roles" },
+  { key: "edit-roles", label: "Edit Roles" },
 ];
 
 export default function ServerSettingsPage() {
   const [active, setActive] = React.useState("profile");
+
 
   let content = null;
   if (active === "profile") {
@@ -20,6 +26,8 @@ export default function ServerSettingsPage() {
     content = <MemberListSection />;
   } else if (active === "roles") {
     content = <CreateRoleSection />;
+  } else if (active === "edit-roles") {
+    content = <EditRolesSection />;
   }
 
   return (
