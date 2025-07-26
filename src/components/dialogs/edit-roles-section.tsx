@@ -1,29 +1,35 @@
-import * as React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "../ui/dialog";
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from "../ui/dialog";
+import { useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
+import { useParams } from "next/navigation";
+import { Id } from "convex/_generated/dataModel";
 
-export type Role = {
-  id: number;
-  name: string;
-  permissions: {
-    viewChannel: boolean;
-    manageRoles: boolean;
-    admin: boolean;
-  };
-  members: number;
-};
+import {roleSchema} from "convex/schema"
 
 type EditRoleDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  role: Role;
-  onSave: (role: Role) => void;
+  role: typeof roleSchema;
+  onSave: (role: typeof roleSchema) => void;
 };
 
-function EditRoleDialog({ open, onOpenChange, role, onSave }: EditRoleDialogProps) {
-  const [roleName, setRoleName] = React.useState(role.name);
-  const [permissions, setPermissions] = React.useState(role.permissions);
+function EditRoleDialog({
+  open,
+  onOpenChange,
+  role,
+  onSave,
+}: EditRoleDialogProps) {
+  const [roleName, setRoleName] = useState(role.name);
+  const [permissions, setPermissions] = useState(role.permissions);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setRoleName(role.name);
     setPermissions(role.permissions);
   }, [role]);
@@ -47,7 +53,10 @@ function EditRoleDialog({ open, onOpenChange, role, onSave }: EditRoleDialogProp
         </DialogHeader>
         <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
           <div>
-            <label htmlFor="roleName" className="mb-2 block text-base font-semibold text-accent">
+            <label
+              htmlFor="roleName"
+              className="mb-2 block text-base font-semibold text-accent"
+            >
               ROLE NAME
             </label>
             <input
@@ -59,18 +68,20 @@ function EditRoleDialog({ open, onOpenChange, role, onSave }: EditRoleDialogProp
             />
           </div>
           <div>
-            <div className="mb-2 text-base font-semibold text-accent">Permissions</div>
+            <div className="mb-2 text-base font-semibold text-accent">
+              Permissions
+            </div>
             <div className="flex flex-col gap-4">
               <label className="flex items-center justify-between gap-3">
                 <span className="font-medium">View Channel</span>
                 <button
                   type="button"
                   aria-pressed={permissions.viewChannel}
-                  onClick={() => handlePermissionChange('viewChannel')}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${permissions.viewChannel ? 'bg-accent' : 'bg-accent/30'}`}
+                  onClick={() => handlePermissionChange("viewChannel")}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${permissions.viewChannel ? "bg-accent" : "bg-accent/30"}`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${permissions.viewChannel ? 'translate-x-5' : 'translate-x-1'}`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${permissions.viewChannel ? "translate-x-5" : "translate-x-1"}`}
                   />
                 </button>
               </label>
@@ -79,11 +90,11 @@ function EditRoleDialog({ open, onOpenChange, role, onSave }: EditRoleDialogProp
                 <button
                   type="button"
                   aria-pressed={permissions.manageRoles}
-                  onClick={() => handlePermissionChange('manageRoles')}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${permissions.manageRoles ? 'bg-accent' : 'bg-accent/30'}`}
+                  onClick={() => handlePermissionChange("manageRoles")}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${permissions.manageRoles ? "bg-accent" : "bg-accent/30"}`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${permissions.manageRoles ? 'translate-x-5' : 'translate-x-1'}`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${permissions.manageRoles ? "translate-x-5" : "translate-x-1"}`}
                   />
                 </button>
               </label>
@@ -92,11 +103,11 @@ function EditRoleDialog({ open, onOpenChange, role, onSave }: EditRoleDialogProp
                 <button
                   type="button"
                   aria-pressed={permissions.admin}
-                  onClick={() => handlePermissionChange('admin')}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${permissions.admin ? 'bg-accent' : 'bg-accent/30'}`}
+                  onClick={() => handlePermissionChange("admin")}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${permissions.admin ? "bg-accent" : "bg-accent/30"}`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${permissions.admin ? 'translate-x-5' : 'translate-x-1'}`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${permissions.admin ? "translate-x-5" : "translate-x-1"}`}
                   />
                 </button>
               </label>
@@ -105,7 +116,9 @@ function EditRoleDialog({ open, onOpenChange, role, onSave }: EditRoleDialogProp
         </div>
         <div className="mt-6 flex gap-2 justify-end">
           <DialogClose asChild>
-            <button className="rounded-lg px-6 py-2 border border-accent/30">Cancel</button>
+            <button className="rounded-lg px-6 py-2 border border-accent/30">
+              Cancel
+            </button>
           </DialogClose>
           <button
             onClick={handleSave}
@@ -121,23 +134,25 @@ function EditRoleDialog({ open, onOpenChange, role, onSave }: EditRoleDialogProp
 }
 
 export function EditRolesSection() {
-  const [roles, setRoles] = React.useState<Role[]>([
-    { id: 1, name: 'Testing', permissions: { viewChannel: true, manageRoles: false, admin: false }, members: 1 },
-    { id: 2, name: 'new role', permissions: { viewChannel: true, manageRoles: false, admin: false }, members: 0 },
-    { id: 3, name: 'new role', permissions: { viewChannel: true, manageRoles: false, admin: false }, members: 0 },
-    { id: 4, name: '@everyone', permissions: { viewChannel: true, manageRoles: false, admin: false }, members: 0 },
-  ]);
-  const [editingRole, setEditingRole] = React.useState<Role | null>(null);
+  const { serverid } = useParams();
+  const roles = useQuery(api.query.getServerRoles, {
+    serverid: serverid as Id<"servers">,
+  });
+  const [editingRole, setEditingRole] = useState<typeof roleSchema | null>(null);
   return (
     <div className="max-w-2xl mx-auto w-full mt-10">
       <div className="flex items-center mb-6 px-2">
         <div className="flex-1 text-lg font-bold text-accent">Role</div>
-        <div className="w-24 text-lg font-bold text-accent text-center">Edit</div>
+        <div className="w-24 text-lg font-bold text-accent text-center">
+          Edit
+        </div>
       </div>
       <div className="divide-y divide-accent/10">
-        {roles.map((role) => (
-          <div key={role.id} className="flex items-center py-4 px-2">
-            <div className="flex-1 text-lg font-semibold text-white">{role.name}</div>
+        {(roles ?? []).map((role) => (
+          <div key={role._id} className="flex items-center py-4 px-2">
+            <div className="flex-1 text-lg font-semibold text-white">
+              {role.name}
+            </div>
             <div className="w-24 flex justify-center">
               <button
                 onClick={() => setEditingRole(role)}
@@ -154,7 +169,9 @@ export function EditRolesSection() {
           open={!!editingRole}
           onOpenChange={() => setEditingRole(null)}
           role={editingRole}
-          onSave={(updated: Role) => setRoles(roles.map(r => r.id === updated.id ? updated : r))}
+          onSave={(updated: Role) =>
+            setRoles(roles.map((r) => (r.id === updated.id ? updated : r)))
+          }
         />
       )}
     </div>

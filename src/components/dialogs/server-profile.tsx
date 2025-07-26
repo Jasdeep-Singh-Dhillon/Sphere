@@ -1,14 +1,25 @@
-'use client';
-import * as React from 'react';
-import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
+"use client";
+import { api } from "convex/_generated/api";
+import { Id } from "convex/_generated/dataModel";
+import { useMutation } from "convex/react";
+import { useParams } from "next/navigation";
+import { useState, useRef, ChangeEvent } from "react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 
-export function ServerProfileSection({ serverName = '', serverIcon = null }: { serverName?: string; serverIcon?: string | null }) {
-  const [name, setName] = React.useState(serverName);
-  const [icon, setIcon] = React.useState<string | null>(serverIcon || null);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
-
-  const handleIconChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+export function ServerProfileSection({
+  serverName = "",
+  serverIcon = null,
+}: {
+  serverName?: string;
+  serverIcon?: string | null;
+}) {
+  const [name, setName] = useState(serverName);
+  const [icon, setIcon] = useState<string | null>(serverIcon || null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { serverid } = useParams();
+  const changeServerName = useMutation(api.mutation.editServerInfo);
+  const handleIconChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -19,12 +30,18 @@ export function ServerProfileSection({ serverName = '', serverIcon = null }: { s
 
   return (
     <div className="w-full p-0">
-      <div className="text-2xl font-extrabold text-accent tracking-tight mb-1">Server Profile</div>
+      <div className="text-2xl font-extrabold text-accent tracking-tight mb-1">
+        Server Profile
+      </div>
       <div className="text-muted-foreground mb-6 text-base">
-        Customise how your server appears in invite links and, if enabled, in Server Discovery and Announcement Channel messages
+        Customise how your server appears in invite links and, if enabled, in
+        Server Discovery and Announcement Channel messages
       </div>
       <div className="mb-6">
-        <label htmlFor="serverName" className="block text-base font-semibold text-accent mb-2">
+        <label
+          htmlFor="serverName"
+          className="block text-base font-semibold text-accent mb-2"
+        >
           Name
         </label>
         <Input
@@ -37,7 +54,9 @@ export function ServerProfileSection({ serverName = '', serverIcon = null }: { s
       </div>
       <div className="border-t border-accent/10 my-6" />
       <div className="mb-2 text-base font-semibold text-accent">Icon</div>
-      <div className="mb-2 text-sm text-muted-foreground">We recommend an image of at least 512x512.</div>
+      <div className="mb-2 text-sm text-muted-foreground">
+        We recommend an image of at least 512x512.
+      </div>
       <Button
         type="button"
         className="bg-accent text-white font-semibold px-5 py-2 rounded-lg mt-2"
@@ -57,6 +76,12 @@ export function ServerProfileSection({ serverName = '', serverIcon = null }: { s
         <Button
           className="bg-accent text-white font-semibold rounded-lg px-6 shadow transition w-32"
           disabled={!name.trim()}
+          onClick={() => {
+            changeServerName({
+              serverid: serverid as Id<"servers">,
+              servername: name,
+            });
+          }}
         >
           Save
         </Button>

@@ -1,24 +1,38 @@
-'use client';
-import * as React from 'react';
-import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
-import { Switch } from '~/components/ui/switch';
+"use client";
+import { useMutation } from "convex/react";
+import { useState } from "react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Switch } from "~/components/ui/switch";
+import { api } from "convex/_generated/api";
+import { useParams } from "next/navigation";
+import { Id } from "convex/_generated/dataModel";
+import { toast } from "sonner";
 
 export function CreateRoleSection() {
-  const [roleName, setRoleName] = React.useState('');
-  const [permissions, setPermissions] = React.useState({
+  const [roleName, setRoleName] = useState("");
+  const [permissions, setPermissions] = useState({
     viewChannel: true,
     manageRoles: false,
-    admin: false,
+    isAdmin: false,
   });
-
+  const { serverid } = useParams();
+  const createRole = useMutation(api.mutation.createRole);
   const handlePermissionChange = (perm: keyof typeof permissions) => {
     setPermissions((prev) => ({ ...prev, [perm]: !prev[perm] }));
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     // Handle create role logic here
-    console.log({ roleName, permissions });
+    const role = await createRole({
+      serverid: serverid as Id<"servers">,
+      name: roleName,
+      permission: {
+        ...permissions,
+      },
+    });
+    if (role) toast(`Role ${roleName} created successfully`);
+    else toast("Error creating role");
   };
 
   return (
@@ -28,7 +42,10 @@ export function CreateRoleSection() {
       </div>
       <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
         <div>
-          <label htmlFor="roleName" className="mb-2 block text-base font-semibold text-accent">
+          <label
+            htmlFor="roleName"
+            className="mb-2 block text-base font-semibold text-accent"
+          >
             ROLE NAME
           </label>
           <Input
@@ -40,49 +57,68 @@ export function CreateRoleSection() {
           />
         </div>
         <div>
-          <div className="mb-2 text-base font-semibold text-accent">Permissions</div>
+          <div className="mb-2 text-base font-semibold text-accent">
+            Permissions
+          </div>
           <div className="flex flex-col gap-4">
             {/* View Channels */}
             <div className="rounded-xl bg-muted/60 px-5 py-4 flex items-start justify-between">
               <div>
-                <div className="font-semibold text-base text-accent">View Channels</div>
+                <div className="font-semibold text-base text-accent">
+                  View Channels
+                </div>
                 <div className="text-sm text-muted-foreground mt-1">
-                  Allows members to view channels by default (excluding private channels).
+                  Allows members to view channels by default (excluding private
+                  channels).
                 </div>
               </div>
               <Switch
                 checked={permissions.viewChannel}
-                onCheckedChange={() => handlePermissionChange('viewChannel')}
+                onCheckedChange={() => handlePermissionChange("viewChannel")}
                 className="ml-6 mt-1"
               />
             </div>
             {/* Manage Roles */}
             <div className="rounded-xl bg-muted/60 px-5 py-4 flex items-start justify-between">
               <div>
-                <div className="font-semibold text-base text-accent">Manage Roles</div>
+                <div className="font-semibold text-base text-accent">
+                  Manage Roles
+                </div>
                 <div className="text-sm text-muted-foreground mt-1">
-                  Allows members to create new roles and edit or delete roles lower than their highest role. Also allows members to change permissions of individual channels that they have access to.
+                  Allows members to create new roles and edit or delete roles
+                  lower than their highest role. Also allows members to change
+                  permissions of individual channels that they have access to.
                 </div>
               </div>
               <Switch
                 checked={permissions.manageRoles}
-                onCheckedChange={() => handlePermissionChange('manageRoles')}
+                onCheckedChange={() => handlePermissionChange("manageRoles")}
                 className="ml-6 mt-1"
               />
             </div>
             {/* Advanced Permissions */}
             <div className="mt-2">
-              <div className="mb-2 text-base font-semibold text-accent">Advanced Permissions</div>
+              <div className="mb-2 text-base font-semibold text-accent">
+                Advanced Permissions
+              </div>
               <div className="rounded-xl bg-muted/60 px-5 py-4 flex items-start justify-between">
                 <div>
-                  <div className="font-semibold text-base text-accent">Administrator</div>
+                  <div className="font-semibold text-base text-accent">
+                    Administrator
+                  </div>
                   <div className="text-sm text-muted-foreground mt-1">
-                    Members with this permission will have every permission and will also bypass all channel specific permissions or restrictions (for example, these members would get access to all private channels). <span className="font-semibold text-warning">This is a dangerous permission to grant.</span>
+                    Members with this permission will have every permission and
+                    will also bypass all channel specific permissions or
+                    restrictions (for example, these members would get access to
+                    all private channels).{" "}
+                    <span className="font-semibold text-warning">
+                      This is a dangerous permission to grant.
+                    </span>
                   </div>
                 </div>
                 <Switch
-                  checked={permissions.admin}
-                  onCheckedChange={() => handlePermissionChange('admin')}
+                  checked={permissions.isAdmin}
+                  onCheckedChange={() => handlePermissionChange("isAdmin")}
                   className="ml-6 mt-1"
                 />
               </div>
