@@ -15,13 +15,12 @@ export const getJoinedServers = query({
     if (!user) {
       return null;
     }
+    const joined = await ctx.db
+      .query("joinedServers")
+      .withIndex("by_userid", (q) => q.eq("userid", user._id))
+      .collect();
     const servers = await Promise.all(
-      user.joined.map((id) =>
-        ctx.db
-          .query("servers")
-          .withIndex("by_id", (q) => q.eq("_id", id))
-          .unique(),
-      ),
+      joined.map(async (server) => await ctx.db.get(server.serverid)),
     );
     return servers;
   },
@@ -161,5 +160,47 @@ export const getServerInfo = query({
   handler: async (ctx, args) => {
     const server = ctx.db.get(args.serverid);
     return server;
+  },
+});
+
+export const getServerRoles = query({
+  args: {
+    serverid: v.id("servers"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("roles")
+      .withIndex("by_serverid", (q) => q.eq("serverid", args.serverid))
+      .collect();
+  },
+});
+
+export const getServerMembers = query({
+  args: {
+    serverid: v.id("servers"),
+  },
+  handler: async (ctx, { serverid }) => {
+    const members = await ctx.db
+      .query("joinedServers")
+      .withIndex("by_serverid", (q) => q.eq("serverid", serverid))
+      .collect();
+
+    const membersInfo = await Promise.all(
+      members.map(async (member) => {
+        const user = await ctx.db.get(member.userid);
+        if (user) {
+          const userRoles = await ctx.db
+            .query("userRoles")
+            .withIndex("by_userId_serverId", (q) => q.eq("userid", user._id))
+            .filter((q) => q.eq(q.field("serverid"), serverid))
+            .collect();
+          const roles = await Promise.all(
+            userRoles.map(async (role) => await ctx.db.get(role.roleid)),
+          );
+          return { ...user, memberSince: member._creationTime, roles };
+        }
+      }),
+    );
+    return membersInfo;
   },
 });

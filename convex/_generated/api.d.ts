@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as mutation from "../mutation.js";
 import type * as query from "../query.js";
+import type * as webrtc from "../webrtc.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -27,6 +28,7 @@ import type * as query from "../query.js";
 declare const fullApi: ApiFromModules<{
   mutation: typeof mutation;
   query: typeof query;
+  webrtc: typeof webrtc;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

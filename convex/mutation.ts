@@ -41,7 +41,7 @@ export const createAccount = mutation({
     about: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    ctx.db.insert("usersInfo", { ...args, joined: [], username: "" });
+    ctx.db.insert("usersInfo", { ...args, username: "" });
   },
 });
 
@@ -67,10 +67,10 @@ export const createServer = mutation({
       serverIcon: args.serverIcon,
       description: args.description,
     });
-    const joined = userInfo.joined;
-    joined.push(server);
-    console.log(joined);
-    await ctx.db.patch(userInfo._id, { joined });
+    await ctx.db.insert("joinedServers", {
+      userid: userInfo._id,
+      serverid: server,
+    });
 
     return server;
   },
@@ -137,8 +137,26 @@ export const joinServer = mutation({
       .withIndex("by_userId", (q) => q.eq("userid", args.userid))
       .unique();
     if (!user) return null;
-    user.joined.push(args.serverid);
-    return ctx.db.patch(user._id, { joined: user.joined });
+
+    const joinedServers = await ctx.db
+      .query("joinedServers")
+      .withIndex("by_userid", (q) => q.eq("userid", user._id))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("userid"), user._id),
+          q.eq(q.field("serverid"), args.serverid),
+        ),
+      )
+      .collect();
+
+    if (joinedServers.length > 0) {
+      return null;
+    }
+
+    return await ctx.db.insert("joinedServers", {
+      userid: user._id,
+      serverid: args.serverid,
+    });
   },
 });
 
@@ -166,5 +184,98 @@ export const sendImage = mutation({
       channelid: args.channelid,
       type: "file",
     });
+  },
+});
+
+export const editMessage = mutation({
+  args: {
+    messageid: v.id("messages"),
+    userid: v.string(),
+    content: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("usersInfo")
+      .withIndex("by_userId", (q) => q.eq("userid", args.userid))
+      .unique();
+    if (!user) return null;
+
+    const message = await ctx.db.get(args.messageid);
+    return message?.userid === user._id
+      ? await ctx.db.patch(args.messageid, { content: args.content })
+      : null;
+  },
+});
+
+export const createRole = mutation({
+  args: {
+    name: v.string(),
+    permission: v.object({
+      isAdmin: v.boolean(),
+      manageRoles: v.boolean(),
+      viewChannel: v.boolean(),
+    }),
+    serverid: v.id("servers"),
+  },
+  handler: async (ctx, args) => {
+    const permissionid = await ctx.db.insert("permissions", args.permission);
+    return await ctx.db.insert("roles", {
+      name: args.name,
+      permissionid,
+      serverid: args.serverid,
+      color: "",
+    });
+  },
+});
+
+export const addUserRole = mutation({
+  args: {
+    serverid: v.id("servers"),
+    userid: v.id("usersInfo"),
+    roleid: v.id("roles"),
+  },
+  handler: async (ctx, args) => {
+    const userRole = await ctx.db
+      .query("userRoles")
+      .withIndex("by_userId_serverId", (q) => q.eq("userid", args.userid))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("serverid"), args.serverid),
+          q.eq(q.field("roleid"), args.roleid),
+        ),
+      )
+      .first();
+
+    if (userRole) return null;
+    return await ctx.db.insert("userRoles", { ...args });
+  },
+});
+
+export const removeUserRole = mutation({
+  args: {
+    userid: v.id("usersInfo"),
+    roleid: v.id("roles"),
+  },
+  handler: async (ctx, args) => {
+    const userRole = await ctx.db
+      .query("userRoles")
+      .withIndex("by_userId_serverId", (q) => q.eq("userid", args.userid))
+      .filter((q) => q.eq(q.field("roleid"), args.roleid))
+      .unique();
+    if (userRole) {
+      ctx.db.delete(userRole._id);
+      return userRole._id;
+    }
+    return null;
+  },
+});
+
+export const editServerInfo = mutation({
+  args: {
+    serverid: v.id("servers"),
+    servername: v.string(),
+  },
+  handler: async (ctx, { servername, serverid }) => {
+    await ctx.db.patch(serverid, { name: servername });
   },
 });

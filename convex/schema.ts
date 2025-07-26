@@ -4,7 +4,6 @@ import { v } from "convex/values";
 export const userSchema = {
   username: v.string(),
   about: v.optional(v.string()),
-  joined: v.array(v.id("servers")),
   userid: v.string(),
   image: v.optional(v.string()),
 };
@@ -58,10 +57,31 @@ export const serverProfileSchema = {
   about: v.string(),
 };
 
+export const joinedSchema = {
+  userid: v.id("usersInfo"),
+  serverid: v.id("servers"),
+};
+
 export const userRoleSchema = {
   userid: v.id("usersInfo"),
   serverid: v.id("servers"),
-  roleId: v.id("roles"),
+  roleid: v.id("roles"),
+};
+
+export const signalingMessageSchema = {
+  channelId: v.id("channels"),
+  hostId: v.string(),
+  type: v.union(
+    v.literal("offer"),
+    v.literal("answer"),
+    v.literal("candidate"),
+  ),
+  payload: v.string(),
+};
+
+export const callMemberSchema = {
+  channelId: v.id("channels"),
+  userId: v.string(),
 };
 
 export default defineSchema({
@@ -74,8 +94,18 @@ export default defineSchema({
     .index("by_categoryId", ["categoryid"]),
   categories: defineTable(categorySchema).index("by_serverId", ["serverid"]),
   messages: defineTable(messageSchema).index("by_channelId", ["channelid"]),
-  roles: defineTable(roleSchema),
+  roles: defineTable(roleSchema).index("by_serverid", ["serverid"]),
+  joinedServers: defineTable(joinedSchema)
+    .index("by_serverid", ["serverid"])
+    .index("by_userid", ["userid"])
+    .index("by_userid_serverid", ["serverid", "userid"]),
   permissions: defineTable(permissionSchema),
   serverProfiles: defineTable(serverProfileSchema),
-  userRoles: defineTable(userRoleSchema).index("by_userId", ["userid"]),
+  userRoles: defineTable(userRoleSchema).index("by_userId_serverId", ["userid", "serverid"]),
+  signalingMessages: defineTable(signalingMessageSchema).index("by_channelId", [
+    "channelId",
+  ]),
+  callMembers: defineTable(callMemberSchema)
+    .index("by_channelId", ["channelId"])
+    .index("by_channelId_userId", ["channelId", "userId"]),
 });
