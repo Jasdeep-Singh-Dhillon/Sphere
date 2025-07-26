@@ -69,8 +69,8 @@ export const userRoleSchema = {
 };
 
 export const signalingMessageSchema = {
-  channelId: v.id("channels"),
-  hostId: v.string(),
+  channelid: v.id("channels"),
+  hostid: v.string(),
   type: v.union(
     v.literal("offer"),
     v.literal("answer"),
@@ -80,32 +80,35 @@ export const signalingMessageSchema = {
 };
 
 export const callMemberSchema = {
-  channelId: v.id("channels"),
-  userId: v.string(),
+  channelid: v.id("channels"),
+  userid: v.string(),
 };
 
 export default defineSchema({
   usersInfo: defineTable(userSchema)
-    .index("by_userId", ["userid"])
+    .index("by_userid", ["userid"])
     .index("by_username", ["username"]),
   servers: defineTable(serverSchema),
   channels: defineTable(channelSchema)
-    .index("by_serverId", ["serverid"])
-    .index("by_categoryId", ["categoryid"]),
+    .index("by_serverid", ["serverid"])
+    .index("by_categoryid", ["categoryid"]),
   categories: defineTable(categorySchema).index("by_serverId", ["serverid"]),
   messages: defineTable(messageSchema).index("by_channelId", ["channelid"]),
   roles: defineTable(roleSchema).index("by_serverid", ["serverid"]),
-  joinedServers: defineTable(joinedSchema)
+  joined: defineTable(joinedSchema)
     .index("by_serverid", ["serverid"])
     .index("by_userid", ["userid"])
     .index("by_userid_serverid", ["serverid", "userid"]),
   permissions: defineTable(permissionSchema),
   serverProfiles: defineTable(serverProfileSchema),
-  userRoles: defineTable(userRoleSchema).index("by_userId_serverId", ["userid", "serverid"]),
-  signalingMessages: defineTable(signalingMessageSchema).index("by_channelId", [
-    "channelId",
+  userRoles: defineTable(userRoleSchema).index("by_userId_serverId", [
+    "userid",
+    "serverid",
+  ]),
+  signalingMessages: defineTable(signalingMessageSchema).index("by_channelid", [
+    "channelid",
   ]),
   callMembers: defineTable(callMemberSchema)
-    .index("by_channelId", ["channelId"])
-    .index("by_channelId_userId", ["channelId", "userId"]),
+    .index("by_channelid", ["channelid"])
+    .index("by_channelid_userid", ["channelid", "userid"]),
 });

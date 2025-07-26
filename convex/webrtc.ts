@@ -3,8 +3,8 @@ import { mutation, query } from "./_generated/server";
 
 export const sendSignalingMessage = mutation({
   args: {
-    channelId: v.id("channels"),
-    hostId: v.string(),
+    channelid: v.id("channels"),
+    hostid: v.string(),
     type: v.union(
       v.literal("offer"),
       v.literal("answer"),
@@ -15,7 +15,7 @@ export const sendSignalingMessage = mutation({
   handler: async (ctx, args) => {
     const messages = await ctx.db
       .query("signalingMessages")
-      .withIndex("by_channelId", (q) => q.eq("channelId", args.channelId))
+      .withIndex("by_channelid", (q) => q.eq("channelid", args.channelid))
       .filter((q) => q.eq(q.field("type"), "offer"))
       .collect();
     
@@ -31,12 +31,12 @@ export const sendSignalingMessage = mutation({
 
 export const getOffer = query({
   args: {
-    channelId: v.id("channels"),
+    channelid: v.id("channels"),
   },
   handler: async (ctx, args) => {
     const offer = await ctx.db
       .query("signalingMessages")
-      .withIndex("by_channelId", (q) => q.eq("channelId", args.channelId))
+      .withIndex("by_channelid", (q) => q.eq("channelid", args.channelid))
       .filter((q) => q.eq(q.field("type"), "offer"))
       .first();
     return offer;
@@ -50,7 +50,7 @@ export const getSignalingMessages = query({
   handler: async (ctx, args) => {
     const query = ctx.db
       .query("signalingMessages")
-      .withIndex("by_channelId", (q) => q.eq("channelId", args.channelId));
+      .withIndex("by_channelid", (q) => q.eq("channelid", args.channelId));
 
     return await query.take(100);
   },
@@ -63,7 +63,7 @@ export const endCall = mutation({
   handler: async (ctx, args) => {
     const messages = await ctx.db
       .query("signalingMessages")
-      .withIndex("by_channelId", (q) => q.eq("channelId", args.channelId))
+      .withIndex("by_channelid", (q) => q.eq("channelid", args.channelId))
       .collect();
     await Promise.all(messages.map((message) => ctx.db.delete(message._id)));
   },
