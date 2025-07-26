@@ -23,16 +23,14 @@ export function AppSidebar({
     | undefined;
 }) {
   return (
-    <Sidebar variant="floating">
+    <Sidebar>
       <SidebarHeader>
         <ServerOptions />
       </SidebarHeader>
 
-      {/* <Suspense fallback="Loading..."> */}
       <SidebarContent>
         <Categories />
       </SidebarContent>
-      {/* </Suspense> */}
 
       <SidebarFooter>
         <SidebarUser user={user} />
