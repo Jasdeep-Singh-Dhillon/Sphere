@@ -16,14 +16,14 @@ import { CircleX } from "lucide-react";
 export function MemberListSection() {
   const params = useParams();
   const serverid = params.serverid as Id<"servers">;
-  const members = useQuery(api.query.getServerMembers, {
+  const members = useQuery(api.servers.getMembers, {
     serverid: serverid,
   });
-  const serverRoles = useQuery(api.query.getServerRoles, {
+  const serverRoles = useQuery(api.servers.getRoles, {
     serverid: serverid,
   });
-  const addRole = useMutation(api.mutation.addUserRole);
-  const removeRole = useMutation(api.mutation.removeUserRole);
+  const addRole = useMutation(api.users.addRole);
+  const removeRole = useMutation(api.users.removeRole);
   return (
     <div className="max-w-[1200px] mx-auto w-full mt-10">
       <div className="text-2xl font-extrabold text-accent tracking-tight px-12 pt-8 pb-0">

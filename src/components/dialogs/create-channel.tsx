@@ -32,7 +32,7 @@ export function CreateChannelDialog({
 }) {
   const [channelType, setChannelType] = useState<"text" | "voice">("text");
   const [open, setOpen] = useState(false);
-  const createChannel = useMutation(api.mutation.createChannel);
+  const createChannel = useMutation(api.servers.createChannel);
   const [channelName, setChannelName] = useState("");
   // const [isPrivate, setIsPrivate] = React.useState(false);
 

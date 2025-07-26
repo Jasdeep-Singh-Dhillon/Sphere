@@ -12,14 +12,14 @@ import { EditRolesSection } from "~/components/dialogs/edit-roles-section";
 const sidebarItems = [
   { key: "profile", label: "Server Profile" },
   { key: "members", label: "Members" },
-  { key: "roles", label: "Roles" },
+  { key: "roles", label: "Create Role" },
   { key: "edit-roles", label: "Edit Roles" },
 ];
 
 export default function ServerSettingsPage() {
   const [active, setActive] = useState("profile");
   const { serverid } = useParams();
-  const serverInfo = useQuery(api.query.getServerInfo, {serverid: serverid as Id<"servers">});
+  const serverInfo = useQuery(api.servers.getInfo, {serverid: serverid as Id<"servers">});
   let content = null;
   if (active === "profile") {
     content = (
@@ -43,7 +43,7 @@ export default function ServerSettingsPage() {
         {sidebarItems.map((item) => (
           <button
             key={item.key}
-            className={`text-left px-3 py-2 rounded-lg font-medium transition text-accent/80 hover:bg-accent/10 ${
+            className={`text-left px-3 py-2 rounded-lg font-medium transition hover:bg-accent/10 ${
               active === item.key ? "bg-accent/20 text-accent font-bold" : ""
             }`}
             onClick={() => setActive(item.key)}

@@ -11,7 +11,7 @@ import { api } from "convex/_generated/api";
 import { useParams } from "next/navigation";
 import { Id } from "convex/_generated/dataModel";
 
-import {roleSchema} from "convex/schema"
+import { roleSchema } from "convex/schema";
 
 type EditRoleDialogProps = {
   open: boolean;
@@ -26,11 +26,11 @@ function EditRoleDialog({
   role,
   onSave,
 }: EditRoleDialogProps) {
-  const [roleName, setRoleName] = useState(role.name);
+  const [roleName, setRoleName] = useState<string>(role.name);
   const [permissions, setPermissions] = useState(role.permissions);
 
   useEffect(() => {
-    setRoleName(role.name);
+    setRoleName(JSON.stringify(role.name));
     setPermissions(role.permissions);
   }, [role]);
 
@@ -62,7 +62,7 @@ function EditRoleDialog({
             <input
               id="roleName"
               placeholder="Role name"
-              value={roleName}
+              value={JSON.stringify(roleName)}
               onChange={(e) => setRoleName(e.target.value)}
               className="mt-2 rounded-lg border-accent/30 focus:border-accent focus:ring-accent/30 transition w-full px-3 py-2"
             />
@@ -135,10 +135,12 @@ function EditRoleDialog({
 
 export function EditRolesSection() {
   const { serverid } = useParams();
-  const roles = useQuery(api.query.getServerRoles, {
+  const roles = useQuery(api.servers.getRoles, {
     serverid: serverid as Id<"servers">,
   });
-  const [editingRole, setEditingRole] = useState<typeof roleSchema | null>(null);
+  const [editingRole, setEditingRole] = useState<typeof roleSchema | null>(
+    null,
+  );
   return (
     <div className="max-w-2xl mx-auto w-full mt-10">
       <div className="flex items-center mb-6 px-2">

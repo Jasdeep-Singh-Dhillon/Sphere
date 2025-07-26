@@ -18,7 +18,7 @@ export function ServerProfileSection({
   const [icon, setIcon] = useState<string | null>(serverIcon || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { serverid } = useParams();
-  const changeServerName = useMutation(api.mutation.editServerInfo);
+  const changeServerName = useMutation(api.servers.editInfo);
   const handleIconChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {

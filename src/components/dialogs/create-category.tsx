@@ -30,7 +30,7 @@ export function CreateCategoryDialog({
   const [categoryName, setCategoryName] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
 
-  const createCategory = useMutation(api.mutation.createCategory);
+  const createCategory = useMutation(api.servers.createCategory);
   const params = useParams();
   const serverid = params.serverid as Id<"servers">;
   const handleCreate = async () => {

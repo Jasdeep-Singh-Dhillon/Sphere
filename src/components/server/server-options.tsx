@@ -29,7 +29,7 @@ export function ServerOptions() {
   const { isMobile } = useSidebar();
   const params = useParams();
   const serverid = params.serverid as Id<"servers">;
-  const server = useQuery(api.query.getServerInfo, { serverid });
+  const server = useQuery(api.servers.getInfo, { serverid });
   const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
 
   const serverOptions = [
@@ -93,6 +93,8 @@ export function ServerOptions() {
                         break;
                       case "Server Settings":
                         redirect(`/channels/${serverid}/settings`);
+                        break;
+                      case "Invite People":
                         break;
                     }
                   }}

@@ -28,9 +28,11 @@ export function Categories() {
     redirect("/channels");
   }
   const serverid = params.serverid as Id<"servers">;
-  const categories = useQuery(api.query.getCategories, {
-    id: serverid,
+  const categories = useQuery(api.servers.getCategories, {
+    serverid: serverid,
   });
+
+  const channelid = params.channelid as Id<"channels">;
 
   return (
     <>
@@ -63,10 +65,15 @@ export function Categories() {
                 <CollapsibleContent className="mb-2">
                   <SidebarGroupContent>
                     {category?.channels.map((channel) => (
-                      <SidebarMenuSubItem key={channel.id}>
-                        <SidebarMenuSubButton asChild>
+                      <SidebarMenuSubItem key={channel.id} className="my-1">
+                        <SidebarMenuSubButton asChild className={`${channel.id === channelid ? "bg-accent hover:bg-accent/70" : ""} `} >
                           <Link
-                            href={channel.type ==="text" ? `/channels/${params.serverid}/${channel.id}` : `/channels/${params.serverid}/${channel.id}/webrtc`}
+                            href={
+                              channel.type === "text"
+                                ? `/channels/${params.serverid}/${channel.id}`
+                                : `/channels/${params.serverid}/${channel.id}/webrtc`
+                            } 
+                            
                           >
                             {channel.type === "voice" ? (
                               <AudioLines />

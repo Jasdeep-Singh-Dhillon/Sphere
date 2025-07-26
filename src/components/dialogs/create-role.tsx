@@ -17,7 +17,7 @@ export function CreateRoleSection() {
     isAdmin: false,
   });
   const { serverid } = useParams();
-  const createRole = useMutation(api.mutation.createRole);
+  const createRole = useMutation(api.servers.createRole);
   const handlePermissionChange = (perm: keyof typeof permissions) => {
     setPermissions((prev) => ({ ...prev, [perm]: !prev[perm] }));
   };

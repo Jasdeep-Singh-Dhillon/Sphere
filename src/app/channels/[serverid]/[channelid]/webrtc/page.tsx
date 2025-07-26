@@ -5,7 +5,7 @@ import { useMutation, useQuery } from "convex/react";
 import { AuthContext } from "~/components/auth/auth-context";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 
 export default function HomePage() {
   const localVideoRef = useRef<HTMLVideoElement>(null);
@@ -14,19 +14,20 @@ export default function HomePage() {
   const localStream = useRef<MediaStream>(null);
   const params = useParams();
   console.log(params);
-  const channel = params.channelid ? params.channelid[0] ? params.channelid[0]: "" : "";
+  const channel = params.channelid;
   const [channelId, setChannelId] = useState<string>(channel);
   const parsedChannelId = channelId as Id<"channels">;
   const [isConnected, setIsConnected] = useState(false);
 
-  const currentUserId = useContext(AuthContext).id;
+  const user = useContext(AuthContext);
+  const currentUserId = user ? user.id : redirect("/login");
 
   const sendSignalingMessage = useMutation(api.webrtc.sendSignalingMessage);
   const messages = useQuery(api.webrtc.getSignalingMessages, {
     channelId: parsedChannelId,
   });
   const endCallSignal = useMutation(api.webrtc.endCall);
-  const offer = useQuery(api.webrtc.getOffer, { channelId: parsedChannelId });
+  const offer = useQuery(api.webrtc.getOffer, { channelid: parsedChannelId });
 
   // Initialize local media stream
   const initLocalStream = useCallback(async () => {
@@ -60,8 +61,8 @@ export default function HomePage() {
         if (event.candidate) {
           console.log("Sending ICE candidate:", event.candidate);
           await sendSignalingMessage({
-            channelId: parsedChannelId,
-            hostId: currentUserId,
+            channelid: parsedChannelId,
+            hostid: currentUserId,
             type: "candidate",
             payload: JSON.stringify(event.candidate),
           });
@@ -121,7 +122,7 @@ export default function HomePage() {
     if (!messages || !peerConnectionRef.current) return;
     console.log("Effect ran");
     messages.forEach(async (msg) => {
-      if (msg.hostId === currentUserId) {
+      if (msg.hostid === currentUserId) {
         return;
       }
 
@@ -167,8 +168,8 @@ export default function HomePage() {
     await pc.setLocalDescription(offer);
 
     await sendSignalingMessage({
-      channelId: parsedChannelId,
-      hostId: currentUserId,
+      channelid: parsedChannelId,
+      hostid: currentUserId,
       type: "offer",
       payload: JSON.stringify(offer),
     });
@@ -195,8 +196,8 @@ export default function HomePage() {
       const answer = await pc.createAnswer();
       peerConnectionRef.current.setLocalDescription(answer);
       await sendSignalingMessage({
-        channelId: incomingCallId as Id<"channels">,
-        hostId: currentUserId,
+        channelid: incomingCallId as Id<"channels">,
+        hostid: currentUserId,
         type: "answer",
         payload: JSON.stringify(answer),
       });

@@ -4,7 +4,6 @@ import MessageSkeleton from "~/components/channel/message-skeleton";
 import { api } from "convex/_generated/api";
 import { useParams } from "next/navigation";
 import { Id } from "convex/_generated/dataModel";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { FormEvent, KeyboardEvent } from "react";
 import useAppForm from "~/lib/app-form";
 import { z } from "zod/v4";
@@ -12,14 +11,16 @@ import { SendHorizontal } from "lucide-react";
 import { getSession } from "~/lib/auth-client";
 import { toast } from "sonner";
 import { FileUpload } from "~/components/channel/file-upload";
-import Image from "next/image";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import Message from "~/components/channel/message";
 
 export default function Channel() {
   const params = useParams();
   const channelid = params.channelid as Id<"channels">;
-  const messages = useQuery(api.query.getMessages, { id: channelid });
+  const channel = useQuery(api.channels.getInfo, { channelid });
+  const messages = useQuery(api.messages.get, { channelid });
 
-  const sendMessage = useMutation(api.mutation.sendMessage);
+  const sendMessage = useMutation(api.messages.send);
   const messageForm = useAppForm({
     defaultValues: {
       message: "",
@@ -64,50 +65,36 @@ export default function Channel() {
   }
   return (
     <>
-      <div className="m-4 row-span-2 overflow-y-scroll">
-        <div className="w-11/12 m-4">
-          {messages ? (
-            messages.length > 0 ? (
-              messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex gap-4 items-center p-2 text-sm `}
-                >
-                  <div>
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src={message?.image} />
-                      <AvatarFallback className="rounded-lg"></AvatarFallback>
-                    </Avatar>
-                  </div>
-
-                  <div className="flex flex-col">
-                    <div className="flex gap-2">
-                      <div className="font-semibold">{message.username}</div>
-                      <div>{new Date(message.time).toDateString()}</div>
-                    </div>
-                    <div className="whitespace-pre-wrap">
-                      {message.type && message.content ? (
-                        <Image
-                          src={message.content}
-                          width="300"
-                          height={"300"}
-                          alt={"Image"}
-                        />
-                      ) : (
-                        <span>{message.content}</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="h-full">Send message to get started</div>
+      <ScrollArea className="m-4 row-span-2 pe-4">
+        <div className="flex flex-col gap-2">
+        {messages ? (
+          messages.length > 0 ? (
+            messages.map((message, index) =>
+              message ? (
+                index > 0 && message.username === messages[index-1]?.username ? (
+                  <Message
+                    key={message.id}
+                    message={message}
+                    showUser={false}
+                  />
+                ) : (
+                  <Message
+                    key={message.id}
+                    message={message}
+                    showUser={true}
+                  ></Message>
+                )
+              ) : (
+                <></>
+              ),
             )
           ) : (
-            <MessageSkeleton />
-          )}
-        </div>
-      </div>
+            <div className="absolute bottom-0">Send message to get started</div>
+          )
+        ) : (
+          <MessageSkeleton />
+        )}</div>
+      </ScrollArea>
       <form
         onSubmit={handleSubmit}
         onKeyDown={keySubmit}

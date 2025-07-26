@@ -10,8 +10,8 @@ import { Id } from "convex/_generated/dataModel";
 import { toast } from "sonner";
 
 export function FileUpload({ channelid }: { channelid: Id<"channels"> }) {
-  const generateUploadUrl = useMutation(api.mutation.generateUploadUrl);
-  const sendImage = useMutation(api.mutation.sendImage);
+  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
+  const sendImage = useMutation(api.storage.sendImage);
 
   async function uploadImage(file: File) {
     console.log("Name", file?.name);
@@ -31,7 +31,7 @@ export function FileUpload({ channelid }: { channelid: Id<"channels"> }) {
     }
     const { data } = await getSession();
     const userid = data?.user.id ? data?.user.id : "";
-    sendImage({ storageId, userid, channelid });
+    sendImage({ storageid: storageId, userid, channelid });
   }
 
   return (
