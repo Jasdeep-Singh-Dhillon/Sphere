@@ -4,10 +4,9 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Switch } from "~/components/ui/switch"; // If you have a Switch component
 import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import { Id } from "../../../convex/_generated/dataModel";
+import { api } from "convex/_generated/api";
+import { Id } from "convex/_generated/dataModel";
 import {
-  AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -19,16 +18,18 @@ import {
 } from "../ui/alert-dialog";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export function CreateCategoryDialog({
   children,
+  closeDialogAction,
 }: {
   children: React.ReactNode;
+  closeDialogAction: Dispatch<SetStateAction<boolean>>;
 }) {
   const [categoryName, setCategoryName] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
-  const [open, setOpen] = useState(false);
+
   const createCategory = useMutation(api.mutation.createCategory);
   const params = useParams();
   const serverid = params.serverid as Id<"servers">;
@@ -39,11 +40,11 @@ export function CreateCategoryDialog({
       toast("Error Creating category");
     }
     setCategoryName("");
-    setOpen(false);
+    closeDialogAction(false);
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <>
       <AlertDialogTrigger asChild>
         <div>{children}</div>
       </AlertDialogTrigger>
@@ -117,6 +118,6 @@ export function CreateCategoryDialog({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogPortal>
-    </AlertDialog>
+    </>
   );
 }

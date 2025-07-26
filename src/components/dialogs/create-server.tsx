@@ -17,7 +17,7 @@ import Image from "next/image";
 import { Label } from "../ui/label";
 import { getSession } from "~/lib/auth-client";
 import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "convex/_generated/api";
 import { toast } from "sonner";
 
 export function CreateServerDialog({

@@ -13,7 +13,7 @@ import { Button } from "~/components/ui/button";
 import { redirect } from "next/navigation";
 import { useSession } from "~/lib/auth-client";
 import { useQuery } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
+import { api } from "convex/_generated/api";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { data, isPending } = useSession();
@@ -38,8 +38,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
       <AppSidebar user={user} />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+      <SidebarInset className="grid grid-rows-[65px_1fr_200px] h-dvh">
+        <header className="row-span-1 flex h-16 shrink-0 items-center gap-2 px-4">
           <SidebarTrigger className="-ml-1" />
           <Button
             data-sidebar="trigger"

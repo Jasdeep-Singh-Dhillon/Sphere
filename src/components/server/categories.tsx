@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, Hash, Plus } from "lucide-react";
+import { AudioLines, ChevronRight, Hash, Plus } from "lucide-react";
 
 import {
   Collapsible,
@@ -17,9 +17,9 @@ import {
 } from "~/components/ui/sidebar";
 import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
-import { api } from "../../../convex/_generated/api";
+import { api } from "convex/_generated/api";
 import { useQuery } from "convex/react";
-import { Id } from "../../../convex/_generated/dataModel";
+import { Id } from "convex/_generated/dataModel";
 import { CreateChannelDialog } from "../dialogs/create-channel";
 
 export function Categories() {
@@ -66,9 +66,13 @@ export function Categories() {
                       <SidebarMenuSubItem key={channel.id}>
                         <SidebarMenuSubButton asChild>
                           <Link
-                            href={`/channels/${params.serverid}/${channel.id}`}
+                            href={channel.type ==="text" ? `/channels/${params.serverid}/${channel.id}` : `/channels/${params.serverid}/${channel.id}/webrtc`}
                           >
-                            <Hash />
+                            {channel.type === "voice" ? (
+                              <AudioLines />
+                            ) : (
+                              <Hash />
+                            )}
                             {channel.name}
                           </Link>
                         </SidebarMenuSubButton>

@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { api } from "../../../convex/_generated/api";
+import { api } from "convex/_generated/api";
 import { ConvexHttpClient } from "convex/browser";
 import { env } from "~/env";
 import { redirect } from "next/navigation";

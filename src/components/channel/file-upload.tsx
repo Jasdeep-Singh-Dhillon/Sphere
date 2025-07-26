@@ -1,12 +1,12 @@
 "use client";
 import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "convex/_generated/api";
 import { Label } from "../ui/label";
 import { CloudUpload } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { getSession } from "~/lib/auth-client";
-import { Id } from "../../../convex/_generated/dataModel";
+import { Id } from "convex/_generated/dataModel";
 import { toast } from "sonner";
 
 export function FileUpload({ channelid }: { channelid: Id<"channels"> }) {

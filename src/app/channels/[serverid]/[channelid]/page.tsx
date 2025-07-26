@@ -1,9 +1,9 @@
 "use client";
 import { useMutation, useQuery } from "convex/react";
 import MessageSkeleton from "~/components/channel/message-skeleton";
-import { api } from "../../../../../convex/_generated/api";
+import { api } from "convex/_generated/api";
 import { useParams } from "next/navigation";
-import { Id } from "../../../../../convex/_generated/dataModel";
+import { Id } from "convex/_generated/dataModel";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { FormEvent, KeyboardEvent } from "react";
 import useAppForm from "~/lib/app-form";
@@ -63,9 +63,9 @@ export default function Channel() {
     }
   }
   return (
-    <div className="m-4">
-      <div className="absolute bottom-0 w-11/12 m-4">
-        <div>
+    <>
+      <div className="m-4 row-span-2 overflow-y-scroll">
+        <div className="w-11/12 m-4">
           {messages ? (
             messages.length > 0 ? (
               messages.map((message) => (
@@ -86,8 +86,13 @@ export default function Channel() {
                       <div>{new Date(message.time).toDateString()}</div>
                     </div>
                     <div className="whitespace-pre-wrap">
-                      {message.type ? (
-                        <Image src={message.content ?? ""} width="300" height={"300"} alt={"Image"} />
+                      {message.type && message.content ? (
+                        <Image
+                          src={message.content}
+                          width="300"
+                          height={"300"}
+                          alt={"Image"}
+                        />
                       ) : (
                         <span>{message.content}</span>
                       )}
@@ -102,36 +107,36 @@ export default function Channel() {
             <MessageSkeleton />
           )}
         </div>
-        <form
-          onSubmit={handleSubmit}
-          onKeyDown={keySubmit}
-          className="flex items-end gap-2 field-sizing-content"
-        >
-          <messageForm.AppField name="message">
-            {(field) => (
-              <field.Textarea
-                id="message"
-                name="message"
-                onBlur={field.handleBlur}
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                className="w-full min-h-22 mt-4 max-h-[300]"
-                placeholder="Enter your message"
-              />
-            )}
-          </messageForm.AppField>
-          <div className="flex flex-col gap-2">
-            <FileUpload channelid={channelid} />
-            <messageForm.Button
-              type="submit"
-              variant={"accent"}
-              className="aspect-square"
-            >
-              <SendHorizontal />
-            </messageForm.Button>
-          </div>
-        </form>
       </div>
-    </div>
+      <form
+        onSubmit={handleSubmit}
+        onKeyDown={keySubmit}
+        className="flex items-end gap-2 field-sizing-content row-span-3 m-4"
+      >
+        <messageForm.AppField name="message">
+          {(field) => (
+            <field.Textarea
+              id="message"
+              name="message"
+              onBlur={field.handleBlur}
+              value={field.state.value}
+              onChange={(e) => field.handleChange(e.target.value)}
+              className="w-full min-h-22 mt-4 max-h-[300]"
+              placeholder="Enter your message"
+            />
+          )}
+        </messageForm.AppField>
+        <div className="flex flex-col gap-2">
+          <FileUpload channelid={channelid} />
+          <messageForm.Button
+            type="submit"
+            variant={"accent"}
+            className="aspect-square"
+          >
+            <SendHorizontal />
+          </messageForm.Button>
+        </div>
+      </form>
+    </>
   );
 }
