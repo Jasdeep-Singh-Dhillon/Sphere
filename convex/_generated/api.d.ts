@@ -13,7 +13,8 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as mutation from "../mutation.js";
+import type * as channels from "../channels.js";
+import type * as messages from "../messages.js";
 import type * as servers from "../servers.js";
 import type * as storage from "../storage.js";
 import type * as users from "../users.js";
@@ -28,7 +29,8 @@ import type * as webrtc from "../webrtc.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  mutation: typeof mutation;
+  channels: typeof channels;
+  messages: typeof messages;
   servers: typeof servers;
   storage: typeof storage;
   users: typeof users;

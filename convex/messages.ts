@@ -16,13 +16,16 @@ export const get = query({
     const result = await Promise.all(
       (messages ?? []).map(async (message) => {
         const user = await ctx.db.get(message.userid);
+        if (!user) return null;
         return {
-          username: user?.username,
-          image: user?.image,
+          username: user.username,
+          image: user.image,
+          userid: user.userid,
           id: message._id,
-          content: message.type
-            ? await ctx.storage.getUrl(message.content as Id<"_storage">)
-            : message.content,
+          content:
+            message.type === "file"
+              ? await ctx.storage.getUrl(message.content as Id<"_storage">)
+              : message.content,
           replyMessageId: message.replyMessageid,
           time: message._creationTime,
           type: message.type,
@@ -40,9 +43,15 @@ export const remove = mutation({
   },
   handler: async (ctx, { messageid, userid }) => {
     const message = await ctx.db.get(messageid);
-    return message?.userid.toString() === userid
-      ? await ctx.db.delete(messageid)
-      : null;
+    const user = await ctx.db
+      .query("usersInfo")
+      .withIndex("by_userid", (q) => q.eq("userid", userid))
+      .unique();
+    if (!message) return null;
+    if (!user) return null;
+    if (message.type === "file")
+      await ctx.storage.delete(message.content as Id<"_storage">);
+    return message.userid === user._id ? await ctx.db.delete(messageid) : null;
   },
 });
 
@@ -52,7 +61,7 @@ export const send = mutation({
     content: v.string(),
     userid: v.string(),
   },
-  handler: async (ctx, {channelid, content, userid}) => {
+  handler: async (ctx, { channelid, content, userid }) => {
     const user = await ctx.db
       .query("usersInfo")
       .withIndex("by_userid", (q) => q.eq("userid", userid))
@@ -73,6 +82,7 @@ export const edit = mutation({
     content: v.string(),
   },
   handler: async (ctx, { userid, messageid, content }) => {
+    if (content.trim().length <= 0) return null;
     const user = await ctx.db
       .query("usersInfo")
       .withIndex("by_userid", (q) => q.eq("userid", userid))
@@ -80,8 +90,10 @@ export const edit = mutation({
     if (!user) return null;
 
     const message = await ctx.db.get(messageid);
-    return message?.userid === user._id
-      ? await ctx.db.patch(messageid, { content: content })
-      : null;
+    if (message?.userid === user._id) {
+      await ctx.db.patch(messageid, { content: content });
+      return true;
+    }
+    return null;
   },
 });

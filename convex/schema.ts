@@ -68,6 +68,10 @@ export const userRoleSchema = {
   roleid: v.id("roles"),
 };
 
+export const inviteSchema = {
+  serverid: v.id("servers"),
+};
+
 export const signalingMessageSchema = {
   channelid: v.id("channels"),
   hostid: v.string(),
@@ -105,6 +109,7 @@ export default defineSchema({
     "userid",
     "serverid",
   ]),
+  invites: defineTable(inviteSchema).index("by_serverid", ["serverid"]),
   signalingMessages: defineTable(signalingMessageSchema).index("by_channelid", [
     "channelid",
   ]),
