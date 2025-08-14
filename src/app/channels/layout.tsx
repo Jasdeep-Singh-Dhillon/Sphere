@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import { AuthContext } from "~/components/auth/auth-context";
 import { useSession } from "~/lib/auth-client";
 import { AppSidebar } from "~/components/server/app-sidebar";
-import { Separator } from "~/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,

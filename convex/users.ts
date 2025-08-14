@@ -129,3 +129,41 @@ export const removeRole = mutation({
     return null;
   },
 });
+
+export const getCustomerId = query({
+  args: {
+    userid: v.string()
+  },
+  handler: async (ctx, {userid}) => {
+    const user = await getUser(ctx, userid);
+    if (!user) return null;
+    
+    return user.customerid;
+  }
+})
+
+export const setSubscribed = mutation({
+  args: {
+    userid: v.string(),
+    customerid: v.string()
+  },
+  handler: async (ctx, { userid, customerid }) => {
+    const user = await getUser(ctx, userid);
+    if (!user) return null;
+
+    ctx.db.patch(user._id, { customerid });
+  },
+});
+
+export const removeSubscribed = mutation({
+  args: {
+    userid: v.string(),
+    customerid: v.string()
+  },
+  handler: async (ctx, { userid, customerid }) => {
+    const user = await getUser(ctx, userid);
+    if (!user) return null;
+
+    ctx.db.patch(user._id, { customerid });
+  },
+});

@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
 
 export const getInfo = query({
   args: {
@@ -26,12 +27,37 @@ export const getRoles = query({
 export const getCategories = query({
   args: {
     serverid: v.id("servers"),
+    userid: v.string(),
   },
-  handler: async (ctx, { serverid }) => {
+  handler: async (ctx, { serverid, userid }) => {
+    const server = await ctx.db.get(serverid);
+    const user = await ctx.db
+      .query("usersInfo")
+      .withIndex("by_userid", (q) => q.eq("userid", userid))
+      .first();
+    if (!user) return null;
+    if (!server) return null;
+
     const categories = await ctx.db
       .query("categories")
       .withIndex("by_serverId", (q) => q.eq("serverid", serverid))
       .collect();
+
+    const userRoles = await ctx.db
+      .query("userRoles")
+      .withIndex("by_userId_serverId", (q) =>
+        q.eq("userid", user._id).eq("serverid", serverid),
+      )
+      .collect();
+
+    const permissions = await Promise.all(
+      userRoles.map(async (userRole) => {
+        const role = await ctx.db.get(userRole.roleid);
+        return role?.permissionid
+          ? (await ctx.db.get(role.permissionid))?._id
+          : null;
+      }),
+    );
 
     const categoriesChannels = await Promise.all(
       (categories ?? []).map(async (category) => {
@@ -43,12 +69,20 @@ export const getCategories = query({
           return { name: channel.name, id: channel._id, type: channel.type };
         });
 
+        if (
+          server.ownerid !== user._id &&
+          category.permissionid &&
+          !permissions.includes(category.permissionid)
+        )
+          return null;
+
         return {
           ...category,
           channels: sendChannels,
         };
       }),
     );
+
     return categoriesChannels;
   },
 });

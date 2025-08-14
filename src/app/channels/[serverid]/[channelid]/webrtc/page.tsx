@@ -15,7 +15,9 @@ export default function HomePage() {
   const params = useParams();
   console.log(params);
   const channel = params.channelid;
-  const [channelId, setChannelId] = useState<string>(channel);
+  const [channelId, setChannelId] = useState<string>(
+    channel ? channel.toString() : "",
+  );
   const parsedChannelId = channelId as Id<"channels">;
   const [isConnected, setIsConnected] = useState(false);
 

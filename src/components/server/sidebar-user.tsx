@@ -26,6 +26,8 @@ import { signOut } from "~/lib/auth-client";
 import { Skeleton } from "../ui/skeleton";
 import { useContext } from "react";
 import { AuthContext } from "../auth/auth-context";
+import getStripe from "~/lib/get-stripe";
+import { toast } from "sonner";
 
 export function SidebarUser() {
   const { isMobile } = useSidebar();
@@ -33,6 +35,27 @@ export function SidebarUser() {
   if (!user) {
     return <Skeleton className="w-full h-16" />;
   }
+
+  const handleSubscribe = async () => {
+    const stripe = await getStripe();
+    if (!stripe) {
+      toast("Error connecting to payment gateway");
+      return;
+    }
+    const { sessionId } = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ priceId: "price_1RvVJPLWo8ObDrgXkO9isW2D" }),
+    }).then((res) => res.json());
+
+    const result = await stripe.redirectToCheckout({ sessionId });
+    if (result.error) {
+      toast("Error connecting to payment gateway");
+      console.error(result.error);
+    }
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -77,11 +100,15 @@ export function SidebarUser() {
 
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  redirect("/account");
+                }}
+              >
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSubscribe}>
                 <CreditCard />
                 Billing
               </DropdownMenuItem>

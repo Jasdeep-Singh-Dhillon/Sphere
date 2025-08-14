@@ -6,6 +6,7 @@ export const userSchema = {
   about: v.optional(v.string()),
   userid: v.string(),
   image: v.optional(v.string()),
+  customerid: v.optional(v.string()),
 };
 
 export const serverSchema = {
@@ -26,6 +27,7 @@ export const channelSchema = {
 export const categorySchema = {
   name: v.string(),
   serverid: v.id("servers"),
+  permissionid: v.optional(v.id("permissions")),
 };
 
 export const messageSchema = {

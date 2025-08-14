@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { EditRolesSection } from "~/components/dialogs/edit-roles-section";
+// import { EditRolesSection } from "~/components/dialogs/edit-roles-section";
 
 const sidebarItems = [
   { key: "profile", label: "Server Profile" },
@@ -29,9 +29,10 @@ export default function ServerSettingsPage() {
     content = <MemberListSection />;
   } else if (active === "roles") {
     content = <CreateRoleSection />;
-  }else if (active === "edit-roles") {
-    content = <EditRolesSection />;
   }
+  // else if (active === "edit-roles") {
+  //   content = <EditRolesSection />;
+  // }
 
   return (
     <div className="row-span-2 flex min-h-screen bg-background">

@@ -50,7 +50,7 @@ export function SetUsernameDialog({
     }
     setChecking(true);
     convex
-      .query(api.query.isUsernameAvailable, { username })
+      .query(api.users.isUsernameAvailable, { username })
       .then((res) => {
         setTaken(res);
       })
@@ -60,7 +60,7 @@ export function SetUsernameDialog({
   const handleSet = async () => {
     // Handle set username logic here
     console.log({ username });
-    const result = await convex.mutation(api.mutation.setUsername, {
+    const result = await convex.mutation(api.users.setUsername, {
       username,
       userid,
     });

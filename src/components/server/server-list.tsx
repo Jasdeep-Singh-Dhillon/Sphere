@@ -9,9 +9,7 @@ import { Card } from "../ui/card";
 import { SidebarGroup } from "../ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
-import InputIcon from "../ui/input-icon";
 import { Search } from "lucide-react";
-import { Label } from "../ui/label";
 
 export default function ServerList() {
   const user = useContext(AuthContext);

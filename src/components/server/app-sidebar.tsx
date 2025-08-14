@@ -16,20 +16,30 @@ import { Button } from "../ui/button";
 import { CreateServerDialog } from "../dialogs/create-server";
 import { Plus } from "lucide-react";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export function AppSidebar() {
-  const params = useParams();
+  const { serverid } = useParams();
+  const [tab, setTab] = useState<"servers" | "channels">(
+    `${serverid ? "channels" : "servers"}`,
+  );
+
+  useEffect(() => {
+    if (serverid) setTab("channels");
+    else setTab("servers");
+  }, [serverid]);
 
   return (
     <Sidebar>
-      <Tabs
-        defaultValue={`${params.serverid ? "channels" : "servers"}`}
-        className="w-full h-full gap-0"
-      >
+      <Tabs value={tab} className="w-full h-full gap-0">
         <SidebarHeader>
           <TabsList className="w-full">
-            <TabsTrigger value="servers">Servers</TabsTrigger>
-            <TabsTrigger value="channels">Channels</TabsTrigger>
+            <TabsTrigger value="servers" onClick={() => setTab("servers")}>
+              Servers
+            </TabsTrigger>
+            <TabsTrigger value="channels" onClick={() => setTab("channels")}>
+              Channels
+            </TabsTrigger>
           </TabsList>
         </SidebarHeader>
 
@@ -43,13 +53,15 @@ export function AppSidebar() {
             </CreateServerDialog>
           </TabsContent>
           <TabsContent value="channels" className="m-2">
-            {params.serverid ? (
+            {serverid ? (
               <>
                 <ServerOptions />
                 <Categories />
               </>
             ) : (
-              <div className="h-full content-center w-full text-center">Select a server</div>
+              <div className="h-full content-center w-full text-center">
+                Select a server
+              </div>
             )}
           </TabsContent>
         </SidebarContent>

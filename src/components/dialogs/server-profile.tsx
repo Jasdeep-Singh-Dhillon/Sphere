@@ -15,7 +15,7 @@ export function ServerProfileSection({
   serverIcon?: string | null;
 }) {
   const [name, setName] = useState(serverName);
-  const [icon, setIcon] = useState<string | null>(serverIcon || null);
+  const [, setIcon] = useState<string | null>(serverIcon || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { serverid } = useParams();
   const changeServerName = useMutation(api.servers.editInfo);

@@ -43,7 +43,7 @@ export default function Message({
             <AvatarFallback className="rounded-lg "></AvatarFallback>
           </Avatar>
           <div className="font-semibold text-sm">{message.username}</div>
-          <div className="text-muted-foreground font-light text-xs pt-0.75">
+          <div className="text-muted-foreground font-light text-xs">
             {date.toDateString()}
           </div>
         </div>
