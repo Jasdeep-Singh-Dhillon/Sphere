@@ -32,7 +32,7 @@ const ScreenShare = ({
   };
   stream: RefObject<MediaStream>;
 }) => {
-  console.log(channel);
+  console.log(channel._id);
   const socket = useRef<WebSocket | null>(null);
   const user = useContext(AuthContext);
   const device = useRef<Device | null>(null);
@@ -75,12 +75,12 @@ const ScreenShare = ({
 
     producerTransport.current.on(
       "produce",
-      ({ rtpParameters, kind }, callback) => {
+      ({ rtpParameters }, callback) => {
         produceCallback = callback;
         send({
           type: "produce",
           transportId: producerTransport.current?.id,
-          kind,
+          kind: "video",
           rtpParameters,
         });
       },
@@ -122,14 +122,13 @@ const ScreenShare = ({
   async function handleSubscribed({
     producerId,
     id,
-    kind,
     rtpParameters,
   }: any) {
     if (!consumerTransport.current) return;
     const consumer = await consumerTransport.current.consume({
       id,
       producerId,
-      kind,
+      kind: "video",
       rtpParameters,
     });
     remoteStream.current.addTrack(consumer.track);
@@ -237,7 +236,7 @@ const ScreenShare = ({
         producerTransport.current?.produce({ track });
     });
 
-    if (consumerTransport.current) connect();
+    // if (consumerTransport.current) connect();
   }
 
   function connect() {
@@ -292,7 +291,7 @@ const ScreenShare = ({
       {remoteTracks.map((video) => (
         <Video key={video.id} track={video} />
       ))}
-      <div className="flex justify-evenly">
+      <div className="flex justify-evenly mt-2">
         {status}
         <Button variant={"accent"} disabled={joinDisabled} onClick={join}>
           <Headset />
