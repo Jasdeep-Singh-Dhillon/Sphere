@@ -1,19 +1,19 @@
 "use client";
 
 import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import { useSession } from "~/lib/auth-client";
 import { redirect } from "next/navigation";
-import { Button } from "~/components/ui/button";
-import { Plus } from "lucide-react";
-import { CreateServerDialog } from "~/components/dialogs/create-server";
+import { useContext } from "react";
+import { AuthContext } from "~/components/auth/auth-context";
 
-function ServerCards({ userid }: { userid: string }) {
-  const servers = useQuery(api.query.getJoinedServers, { userid });
-  const username = useQuery(api.query.getUsername, { userid });
+function ServerCards() {
+  const user = useContext(AuthContext);
+  const userid = user ? user.id : redirect("/login");
+  const servers = useQuery(api.users.getJoined, { userid });
+  const username = useQuery(api.users.getUsername, { userid });
   if (username === "") {
     redirect("/onboarding");
   }
@@ -32,7 +32,7 @@ function ServerCards({ userid }: { userid: string }) {
                   width={400}
                   height={200}
                   src={
-                    // server?.serverIcon ||
+                    server?.serverIcon ||
                     "/images/server_image_placeholder.svg"
                   }
                   alt={`${server?.name}`}
@@ -56,29 +56,9 @@ function ServerCards({ userid }: { userid: string }) {
 }
 
 export default function Servers() {
-  const { data, isPending } = useSession();
-  if (!isPending && !data) {
-    redirect("/login");
-  }
   return (
-    <div className="w-full h-full">
-      {isPending ? (
-        <>Loading...</>
-      ) : data?.user ? (
-        <>
-          <ServerCards userid={data.user.id} />
-          <CreateServerDialog>
-            <Button
-              variant={"accent"}
-              className="absolute bottom-0 right-0 m-2"
-            >
-              <Plus /> Create Server
-            </Button>
-          </CreateServerDialog>
-        </>
-      ) : (
-        ""
-      )}
+    <div>
+      <ServerCards />
     </div>
   );
 }

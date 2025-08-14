@@ -95,7 +95,7 @@ export default function Login() {
             <Icons.google className="w-5 h-5" />
             Continue with Google
           </Button>
-          <Button
+          {/* <Button
             type="button"
             className="flex items-center justify-center gap-2 w-full py-2 rounded-lg shadow-primary shadow-2xl/30"
             onClick={async () => {
@@ -104,7 +104,7 @@ export default function Login() {
           >
             <Icons.apple className="w-5 h-5" />
             Continue with Apple
-          </Button>
+          </Button> */}
 
           <Button
             type="submit"

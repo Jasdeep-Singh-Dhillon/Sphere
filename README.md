@@ -5,7 +5,7 @@
 - [x] Create Server
 - [x] Create Channels
 - [x] Set Username
-- [ ] File Uploads
+- [x] File Uploads
 - [ ] Embed Photos
 - [ ] Embed Videos
 - [ ] Members in servers schema

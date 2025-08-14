@@ -21,8 +21,7 @@ export const auth = betterAuth({
     user: {
       create: {
         after: async (user) => {
-          console.log(user.id);
-          convex.mutation(api.mutation.createAccount, {
+          convex.mutation(api.users.createAccount, {
             userid: user.id,
             image: user?.image ? user.image : undefined,
           });

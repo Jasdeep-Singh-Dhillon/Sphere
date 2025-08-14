@@ -4,9 +4,9 @@ import * as React from "react";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { Id } from "../../../convex/_generated/dataModel";
+import { Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "convex/_generated/api";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,7 +32,7 @@ export function CreateChannelDialog({
 }) {
   const [channelType, setChannelType] = useState<"text" | "voice">("text");
   const [open, setOpen] = useState(false);
-  const createChannel = useMutation(api.mutation.createChannel);
+  const createChannel = useMutation(api.servers.createChannel);
   const [channelName, setChannelName] = useState("");
   // const [isPrivate, setIsPrivate] = React.useState(false);
 

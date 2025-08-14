@@ -17,7 +17,7 @@ import Image from "next/image";
 import { Label } from "../ui/label";
 import { getSession } from "~/lib/auth-client";
 import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "convex/_generated/api";
 import { toast } from "sonner";
 
 export function CreateServerDialog({
@@ -30,7 +30,7 @@ export function CreateServerDialog({
   const [about, setAbout] = useState("");
   const [photo, setPhoto] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const createServer = useMutation(api.mutation.createServer);
+  const createServer = useMutation(api.servers.create);
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {

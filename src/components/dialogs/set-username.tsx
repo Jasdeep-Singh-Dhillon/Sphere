@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { api } from "../../../convex/_generated/api";
+import { api } from "convex/_generated/api";
 import { ConvexHttpClient } from "convex/browser";
 import { env } from "~/env";
 import { redirect } from "next/navigation";
@@ -50,27 +50,17 @@ export function SetUsernameDialog({
     }
     setChecking(true);
     convex
-      .query(api.query.isUsernameAvailable, { username })
+      .query(api.users.isUsernameAvailable, { username })
       .then((res) => {
         setTaken(res);
       })
       .finally(() => setChecking(false));
-    // const timeout = setTimeout(() => {
-    //   fetch("/api/check-username", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ username: username.trim() }),
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => setTaken(data.taken))
-    //     .finally(() => setChecking(false));
-    // }, 400);
   }, [username]);
 
   const handleSet = async () => {
     // Handle set username logic here
     console.log({ username });
-    const result = await convex.mutation(api.mutation.setUsername, {
+    const result = await convex.mutation(api.users.setUsername, {
       username,
       userid,
     });

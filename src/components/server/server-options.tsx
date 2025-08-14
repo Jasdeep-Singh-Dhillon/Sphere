@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { EllipsisVertical } from "lucide-react";
 
 import {
@@ -15,25 +15,22 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar";
-import {
-  DoorOpen,
-  FolderPlus,
-  MailPlus,
-  Settings,
-} from "lucide-react";
+import { DoorOpen, FolderPlus, MailPlus, Settings } from "lucide-react";
 import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import { useParams } from "next/navigation";
-import { Id } from "../../../convex/_generated/dataModel";
+import { api } from "convex/_generated/api";
+import { redirect, useParams } from "next/navigation";
+import { Id } from "convex/_generated/dataModel";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { CreateCategoryDialog } from "../dialogs/create-category";
 import { Button } from "../ui/button";
+import { AlertDialog } from "../ui/alert-dialog";
 
 export function ServerOptions() {
   const { isMobile } = useSidebar();
   const params = useParams();
   const serverid = params.serverid as Id<"servers">;
-  const server = useQuery(api.query.getServerInfo, { serverid });
+  const server = useQuery(api.servers.getInfo, { serverid });
+  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
 
   const serverOptions = [
     {
@@ -47,7 +44,6 @@ export function ServerOptions() {
     {
       name: "Create Category",
       logo: FolderPlus,
-      component: CreateCategoryDialog,
     },
     {
       name: "Leave Server",
@@ -57,56 +53,63 @@ export function ServerOptions() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+        <AlertDialog
+          open={categoryDialogOpen}
+          onOpenChange={setCategoryDialogOpen}
+        >
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              >
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={server?.serverIcon} />
+                  <AvatarFallback className="rounded-lg"></AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{server?.name}</span>
+                </div>
+                <EllipsisVertical className="ml-auto" />
+              </SidebarMenuButton>
+            </DropdownMenuTrigger>
+            <CreateCategoryDialog closeDialogAction={setCategoryDialogOpen}>
+              <Button className="hidden" />
+            </CreateCategoryDialog>
+            <DropdownMenuContent
+              className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+              align="start"
+              side={isMobile ? "bottom" : "right"}
+              sideOffset={4}
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={server?.serverIcon} />
-                <AvatarFallback className="rounded-lg"></AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{server?.name}</span>
-              </div>
-              <EllipsisVertical className="ml-auto" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <CreateCategoryDialog>
-            <Button variant={"outline"} className="w-full mt-2">
-              <FolderPlus /> Create Category
-            </Button>
-          </CreateCategoryDialog>
-          <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            align="start"
-            side={isMobile ? "bottom" : "right"}
-            sideOffset={4}
-          >
-            {serverOptions.map((option) => (
-              <DropdownMenuItem key={option.name} className=" p-2">
-                {option?.component ? (
-                  <option.component>
-                    <div className="flex gap-2 items-center justify-center">
-                      <div className="flex size-6 items-center justify-center rounded-md border">
-                        <option.logo className="size-3.5 shrink-0" />
-                      </div>
-                      {option.name}
-                    </div>
-                  </option.component>
-                ) : (
+              {serverOptions.map((option) => (
+                <DropdownMenuItem
+                  key={option.name}
+                  className="p-2"
+                  onClick={() => {
+                    switch (option.name) {
+                      case "Create Category":
+                        setCategoryDialogOpen(true);
+                        break;
+                      case "Server Settings":
+                        redirect(`/channels/${serverid}/settings`);
+                        break;
+                      case "Invite People":
+                        break;
+                    }
+                  }}
+                >
                   <div className="flex gap-2 items-center justify-center">
                     <div className="flex size-6 items-center justify-center rounded-md border">
                       <option.logo className="size-3.5 shrink-0" />
                     </div>
                     {option.name}
                   </div>
-                )}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </AlertDialog>
       </SidebarMenuItem>
     </SidebarMenu>
   );
